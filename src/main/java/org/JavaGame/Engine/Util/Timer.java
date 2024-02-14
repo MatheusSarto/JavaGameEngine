@@ -1,4 +1,7 @@
-package org.JavaGame.Util;
+package org.JavaGame.Engine.Util;
+
+import java.time.Duration;
+import java.time.Instant;
 
 public class Timer
 {

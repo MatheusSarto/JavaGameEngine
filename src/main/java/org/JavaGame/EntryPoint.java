@@ -1,7 +1,11 @@
 package org.JavaGame;
 
-public class Main {
+import org.JavaGame.Engine.Application;
+
+public class EntryPoint
+{
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        Application app = new Application();
+        app.run();
     }
 }
