@@ -57,9 +57,9 @@ public class SceneManager
         return m_Scenes.get(m_CurrentScene);
     }
 
-    public void updateScene()
+    public void updateScene(float dt)
     {
-        m_Scenes.get(m_CurrentScene).update();
+        m_Scenes.get(m_CurrentScene).update(dt);
     }
 
     public void setCurrentScene(int sceneid)

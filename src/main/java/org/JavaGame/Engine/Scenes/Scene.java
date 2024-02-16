@@ -1,9 +1,12 @@
 package org.JavaGame.Engine.Scenes;
 
+import org.JavaGame.Engine.Camera;
 import org.JavaGame.Engine.Runnable;
 
 public abstract class Scene implements Runnable
 {
+    protected Camera m_Camera;
+
     public Scene(String name, int  id)
     {
         m_Name  = name;

@@ -25,10 +25,8 @@ public class Window
         sceneManager = new SceneManager();
         sceneManager.addScene(new LevelEditorScene("LEVEL EDITOR SCENE", 0));
         sceneManager.addScene(new LevelScene("LEVEL SCENE", 1));
-        currentScene = sceneManager.loadScene(0);
-        currentScene.Init();
-
-
+        sceneManager.setCurrentScene(0);
+        sceneManager.getCurrentScene().Init();
     }
 
     public void render()
@@ -48,18 +46,18 @@ public class Window
 
             glClear(GL_COLOR_BUFFER_BIT);
             glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-            sceneManager.getCurrentScene().update();
+            sceneManager.getCurrentScene().update(dt);
             glfwSwapBuffers(m_GlfwWindow);
 
             if(KeyListener.isKeyPressed(KeyEvent.VK_1))
             {
-                currentScene = sceneManager.loadScene(1);
-                currentScene.Init();
+                sceneManager.setCurrentScene(1);
+                sceneManager.getCurrentScene().Init();
             }
             if(KeyListener.isKeyPressed(KeyEvent.VK_0))
             {
-                currentScene = sceneManager.loadScene(0);
-                currentScene.Init();
+                sceneManager.setCurrentScene(0);
+                sceneManager.getCurrentScene().Init();
             }
 
         }
@@ -76,7 +74,6 @@ public class Window
 
 
     private void glfwFreeCallbacks(long mGlfwWindow) { }
-    private Scene currentScene;
     private SceneManager sceneManager;
     private int m_Width, m_Height;
     private String m_Title;
