@@ -27,6 +27,8 @@ public class Window
         sceneManager.addScene(new LevelScene("LEVEL SCENE", 1));
         currentScene = sceneManager.loadScene(0);
         currentScene.Init();
+
+
     }
 
     public void render()
@@ -39,16 +41,15 @@ public class Window
         {
             // Pool Events
             glfwPollEvents();
-            glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-            currentScene.update();
-            glClear(GL_COLOR_BUFFER_BIT);
-
-            glfwSwapBuffers(m_GlfwWindow);
-
 
             endTime = Timer.getTime();
             float dt = endTime - beginTime;
             beginTime = endTime;
+
+            glClear(GL_COLOR_BUFFER_BIT);
+            glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+            sceneManager.getCurrentScene().update();
+            glfwSwapBuffers(m_GlfwWindow);
 
             if(KeyListener.isKeyPressed(KeyEvent.VK_1))
             {

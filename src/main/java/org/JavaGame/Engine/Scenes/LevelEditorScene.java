@@ -20,12 +20,7 @@ public class LevelEditorScene extends Scene
     public void fixedUpdate(float dt)
     {
         System.out.println("LEVEL EDITOR SCENE FIXED UPDATE");
-    }
 
-    @Override
-    public void update()
-    {
-        System.out.println("LEVEL EDITOR SCENE UPDATE");
 
         // Bind shader program
         glUseProgram(shaderProgram);
@@ -36,7 +31,7 @@ public class LevelEditorScene extends Scene
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
 
-        glDrawElements(GL_TRIANGLES, 6, GL_INT, 0);
+        glDrawElements(GL_TRIANGLES, elementArary.length, GL_UNSIGNED_INT, 0);
 
         // Unbid everything
         glDisableVertexAttribArray(0);
@@ -47,10 +42,34 @@ public class LevelEditorScene extends Scene
     }
 
     @Override
+    public void update()
+    {
+        System.out.println("LEVEL EDITOR SCENE UPDATE");
+
+
+        // Bind shader program
+        glUseProgram(shaderProgram);
+        // Bind the VAO that we're using
+        glBindVertexArray(vaoID);
+
+        // Enable the vertex attribute pointers
+        glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(1);
+
+        glDrawElements(GL_TRIANGLES, elementArary.length, GL_UNSIGNED_INT, 0);
+
+        // Unbid everything
+        glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);
+
+        glBindVertexArray(0);
+        glUseProgram(0);
+
+    }
+
+    @Override
     public void Init()
     {
-        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
         System.out.println("LEVEL EDITOR SCENE INIT METHOD");
         // Compile and link the shaders
 
@@ -125,7 +144,7 @@ public class LevelEditorScene extends Scene
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,eboID);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, elementBuffer, GL_STATIC_DRAW);
 
-        // Add vortex attribute pointers
+        // Add vertex attribute pointers
         int positionsSize = 3;
         int colorSize = 4;
         int floatSizeBytes = 4;
@@ -137,7 +156,8 @@ public class LevelEditorScene extends Scene
         glEnableVertexAttribArray(1);
     }
 
-    private String vertexShaderSrc = "#version 330 core\n" +
+    private String vertexShaderSrc =
+            "#version 330 core\n" +
             "layout (location=0) in vec3 aPos;\n" +
             "layout (location=1) in vec4 aColor;\n" +
             "\n" +
@@ -147,8 +167,9 @@ public class LevelEditorScene extends Scene
             "{\n" +
             "    fColor = aColor;\n" +
             "    gl_Position = vec4(aPos, 1.0);\n" +
-            "}";
-    private String fragmentShaderSrc = "#version 330 core\n" +
+            "}\n";
+    private String fragmentShaderSrc =
+            "#version 330 core\n" +
             "\n" +
             "in vec4 fColor;\n" +
             "\n" +
