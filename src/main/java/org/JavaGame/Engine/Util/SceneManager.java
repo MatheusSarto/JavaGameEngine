@@ -22,6 +22,7 @@ public class SceneManager
                 .findAny()
                 .orElseThrow( RuntimeException::new );
         m_CurrentScene = m_Scenes.indexOf(newscene);
+        getCurrentScene().Init();
 
         return newscene;
     }
@@ -31,6 +32,7 @@ public class SceneManager
                 .findAny()
                 .orElseThrow( RuntimeException::new );
         m_CurrentScene = m_Scenes.indexOf(newscene);
+        getCurrentScene().Init();
 
         return newscene;
     }

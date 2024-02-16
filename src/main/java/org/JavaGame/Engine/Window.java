@@ -2,6 +2,7 @@ package org.JavaGame.Engine;
 
 import org.JavaGame.Engine.Scenes.LevelEditorScene;
 import org.JavaGame.Engine.Scenes.LevelScene;
+import org.JavaGame.Engine.Scenes.Scene;
 import org.JavaGame.Engine.Util.SceneManager;
 import org.JavaGame.Engine.Util.Timer;
 import org.lwjgl.opengl.GL;
@@ -24,7 +25,8 @@ public class Window
         sceneManager = new SceneManager();
         sceneManager.addScene(new LevelEditorScene("LEVEL EDITOR SCENE", 0));
         sceneManager.addScene(new LevelScene("LEVEL SCENE", 1));
-        sceneManager.loadScene(1);
+        currentScene = sceneManager.loadScene(0);
+        currentScene.Init();
     }
 
     public void render()
@@ -37,7 +39,8 @@ public class Window
         {
             // Pool Events
             glfwPollEvents();
-            glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+            glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+            currentScene.update();
             glClear(GL_COLOR_BUFFER_BIT);
 
             glfwSwapBuffers(m_GlfwWindow);
@@ -49,13 +52,15 @@ public class Window
 
             if(KeyListener.isKeyPressed(KeyEvent.VK_1))
             {
-                sceneManager.loadScene(1);
+                currentScene = sceneManager.loadScene(1);
+                currentScene.Init();
             }
             if(KeyListener.isKeyPressed(KeyEvent.VK_0))
             {
-                sceneManager.loadScene(0);
+                currentScene = sceneManager.loadScene(0);
+                currentScene.Init();
             }
-            sceneManager.updateScene();
+
         }
 
         // Free the Memory
@@ -70,6 +75,7 @@ public class Window
 
 
     private void glfwFreeCallbacks(long mGlfwWindow) { }
+    private Scene currentScene;
     private SceneManager sceneManager;
     private int m_Width, m_Height;
     private String m_Title;

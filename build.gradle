@@ -5,8 +5,8 @@ plugins {
 group = 'org.JavaGame'
 version = '1.0-SNAPSHOT'
 
-project.ext.lwjglVersion = "3.3.3"
-project.ext.jomlVersion = "1.10.5"
+project.ext.lwjglVersion = "3.2.3"
+project.ext.jomlVersion = "1.9.23"
 project.ext.steamworks4jVersion = "1.9.0"
 project.ext.steamworks4jserverVersion = "1.9.0"
 project.ext.lwjglNatives = "natives-windows"
