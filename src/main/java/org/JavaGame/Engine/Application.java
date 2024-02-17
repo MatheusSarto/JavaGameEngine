@@ -16,7 +16,7 @@ public class Application
 
     public void run()
     {
-        m_Window.render();
+        m_Window.run();
     }
 
 

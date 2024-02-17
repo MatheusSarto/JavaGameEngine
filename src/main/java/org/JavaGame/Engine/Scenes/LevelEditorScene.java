@@ -2,6 +2,7 @@ package org.JavaGame.Engine.Scenes;
 
 import org.JavaGame.Engine.Camera;
 import org.JavaGame.Engine.Renderer.Shader;
+import org.JavaGame.Engine.Renderer.Texture;
 import org.JavaGame.Engine.Util.Timer;
 import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
@@ -52,6 +53,13 @@ public class LevelEditorScene extends Scene
 
         // Bind shader program
         m_DefaultShader.bind();
+
+        // Upload texture to shader
+        m_DefaultShader.uploadTexture("TEXTURE_SAMPLER", 0);
+        glActiveTexture(GL_TEXTURE0);
+        m_TestTexture.bind();
+
+        // Upload data to shader
         m_DefaultShader.uploadMat4f("uProjection", m_Camera.getProjectionMatrix());
         m_DefaultShader.uploadMat4f("uView", m_Camera.getViewMatrix());
         m_DefaultShader.uploadFloat("uTime", Timer.getTime());
@@ -79,6 +87,7 @@ public class LevelEditorScene extends Scene
         this.m_Camera = new Camera(new Vector2f());
         m_DefaultShader = new Shader("assets/shaders/default.glsl");
         m_DefaultShader.compile();
+        this.m_TestTexture = new Texture("assets/images/TRISTANA.jpg");
 
         // Generate VAO, VBO and EBO buffer objects
         vaoID = glGenVertexArrays();
@@ -104,23 +113,27 @@ public class LevelEditorScene extends Scene
         // Add vertex attribute pointers
         int positionsSize = 3;
         int colorSize = 4;
-        int floatSizeBytes = 4;
-        int vertexSizeBytes = (positionsSize + colorSize) * floatSizeBytes;
+        int uvSize = 2;
+        int vertexSizeBytes = (positionsSize + colorSize + uvSize) * Float.BYTES;
         glVertexAttribPointer(0, positionsSize, GL_FLOAT, true, vertexSizeBytes, 0);
         glEnableVertexAttribArray(0);
 
-        glVertexAttribPointer(1, colorSize, GL_FLOAT, true, vertexSizeBytes, positionsSize * floatSizeBytes);
+        glVertexAttribPointer(1, colorSize, GL_FLOAT, true, vertexSizeBytes, positionsSize * Float.BYTES);
         glEnableVertexAttribArray(1);
+
+        glVertexAttribPointer(2, uvSize, GL_FLOAT, false, vertexSizeBytes, (positionsSize + colorSize) * Float.BYTES);
+        glEnableVertexAttribArray(2);
     }
     private int vaoID, vboID, eboID;
     private Shader m_DefaultShader;
+    private Texture m_TestTexture;
 
     private float[] vertexArray = {
-     // positions                   // colors
-     100.5f,   0.5f,     0.0f,      1.0f, 0.0f, 0.0f, 1.0f,  // Bottom Right
-     0.5f,     100.5f,   0.0f,      0.0f, 1.0f, 0.0f, 1.0f, // Top Left
-     100.5f,   100.5f,   0.0f,      0.0f, 0.0f, 1.0f, 1.0f, // Top Right
-     0.5f,     0.5f,     0.0f,      1.0f, 1.0f, 0.0f, 1.0f  // Bottom Left
+     // positions                   // colors                    // UV Coordinates
+     100.5f,   0.5f,     0.0f,      1.0f, 0.0f, 0.0f, 1.0f,      1, 0,   // Bottom Right
+     0.5f,     100.5f,   0.0f,      0.0f, 1.0f, 0.0f, 1.0f,      0, 1,   // Top Left
+     100.5f,   100.5f,   0.0f,      0.0f, 0.0f, 1.0f, 1.0f,      1, 1,   // Top Right
+     0.5f,     0.5f,     0.0f,      1.0f, 1.0f, 0.0f, 1.0f,      0, 0    // Bottom Left
     };
 
     /// IMPORTANT: Must be in counter-clockwise order

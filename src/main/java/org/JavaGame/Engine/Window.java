@@ -29,7 +29,7 @@ public class Window
         sceneManager.getCurrentScene().Init();
     }
 
-    public void render()
+    public void run()
     {
         System.out.println("RENDER THREAD");
         float beginTime = Timer.getTime();
