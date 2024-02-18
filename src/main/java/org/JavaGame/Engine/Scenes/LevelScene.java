@@ -10,15 +10,6 @@ public class LevelScene extends Scene
     }
 
     @Override
-    public void fixedUpdate(float dt)
-    {
-        System.out.println("LEVEL SCENE FIXED UPDATE");
-        glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-    }
-
-    @Override
     public void update(float dt)
     {
         System.out.println("LEVEL SCENE UPDATE");

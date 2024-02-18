@@ -1,6 +1,9 @@
 package org.JavaGame.Engine.Scenes;
 
 import org.JavaGame.Engine.Camera;
+import org.JavaGame.Engine.Components.FontRender;
+import org.JavaGame.Engine.Components.SprintRender;
+import org.JavaGame.Engine.GameObject;
 import org.JavaGame.Engine.Renderer.Shader;
 import org.JavaGame.Engine.Renderer.Texture;
 import org.JavaGame.Engine.Util.Timer;
@@ -23,34 +26,8 @@ public class LevelEditorScene extends Scene
 
     }
     @Override
-    public void fixedUpdate(float dt)
-    {
-        System.out.println("LEVEL EDITOR SCENE FIXED UPDATE");
-
-
-
-        // Bind the VAO that we're using
-        glBindVertexArray(vaoID);
-
-        // Enable the vertex attribute pointers
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
-
-        glDrawElements(GL_TRIANGLES, elementArary.length, GL_UNSIGNED_INT, 0);
-
-        // Unbid everything
-        glDisableVertexAttribArray(0);
-        glDisableVertexAttribArray(1);
-
-        glBindVertexArray(0);
-        glUseProgram(0);
-    }
-
-    @Override
     public void update(float dt)
     {
-        System.out.println("LEVEL EDITOR SCENE UPDATE");
-
         // Bind shader program
         m_DefaultShader.bind();
 
@@ -78,12 +55,33 @@ public class LevelEditorScene extends Scene
         glDisableVertexAttribArray(1);
 
         glBindVertexArray(0);
+
         m_DefaultShader.detach();
+
+        // Update all game objects
+        for(GameObject gameobject : m_GameObjects)
+        {
+            gameobject.update(dt);
+        }
     }
 
     @Override
     public void Init()
     {
+        // Calls 'Scene' Init method
+        super.Init();
+
+        // Creating GameObjectS to be added on Scene before Scene's update method
+        GameObject m_GameObject = new GameObject("test object");
+        m_GameObject.addComponent(new SprintRender());
+        m_GameObject.addComponent(new FontRender());
+        this.addGameObjectToScene(m_GameObject);
+
+        GameObject gameObject2 = new GameObject("GAME OBJECT 2");
+        gameObject2.addComponent(new SprintRender());
+        this.addGameObjectToScene(gameObject2);
+
+        // Creating Camera and setting shaders and textures
         this.m_Camera = new Camera(new Vector2f());
         m_DefaultShader = new Shader("assets/shaders/default.glsl");
         m_DefaultShader.compile();
@@ -127,7 +125,6 @@ public class LevelEditorScene extends Scene
     private int vaoID, vboID, eboID;
     private Shader m_DefaultShader;
     private Texture m_TestTexture;
-
     private float[] vertexArray = {
      // positions                   // colors                    // UV Coordinates
      100.5f,   0.5f,     0.0f,      1.0f, 0.0f, 0.0f, 1.0f,      1, 0,   // Bottom Right
@@ -136,7 +133,7 @@ public class LevelEditorScene extends Scene
      0.5f,     0.5f,     0.0f,      1.0f, 1.0f, 0.0f, 1.0f,      0, 0    // Bottom Left
     };
 
-    /// IMPORTANT: Must be in counter-clockwise order
+    // IMPORTANT: Must be in counter-clockwise order
     private int[] elementArary = {
         2, 1, 0, // Top Right Triangle
         0, 1, 3 // Bottom Left Triangle

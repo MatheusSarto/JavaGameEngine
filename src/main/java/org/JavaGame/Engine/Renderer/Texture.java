@@ -9,8 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.stb.STBImage.stbi_image_free;
-import static org.lwjgl.stb.STBImage.stbi_load;
+import static org.lwjgl.stb.STBImage.*;
 
 public class Texture
 {
@@ -30,6 +29,9 @@ public class Texture
         // When shrinking an image, pixelate
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
+        // Solving problem of textures being rendered upside down
+        stbi_set_flip_vertically_on_load(true);
+
         // Load image
         IntBuffer width     = BufferUtils.createIntBuffer(1);
         IntBuffer height    = BufferUtils.createIntBuffer(1);
@@ -38,11 +40,11 @@ public class Texture
 
         if(image != null)
         {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width.get(0), height.get(0), 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width.get(0), height.get(0), 0, GL_RGB, GL_UNSIGNED_BYTE, image);
         }
         else
         {
-            assert false : "ERROR: (TEXTURE) COULD NOT LOAD IMAGE '" + filepath + "'";
+            assert false : "ERROR: (TEXTURE) COULD NOT LOAD IMAGE '" + m_FilePath + "'";
         }
 
         stbi_image_free(image);
