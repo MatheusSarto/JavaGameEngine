@@ -2,7 +2,6 @@ package org.JavaGame.Engine;
 
 import org.JavaGame.Engine.Scenes.LevelEditorScene;
 import org.JavaGame.Engine.Scenes.LevelScene;
-import org.JavaGame.Engine.Scenes.Scene;
 import org.JavaGame.Engine.Util.SceneManager;
 import org.JavaGame.Engine.Util.Timer;
 import org.lwjgl.opengl.GL;
@@ -15,18 +14,23 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Window
 {
+    private SceneManager SceneManager;
+    private int Width, Height;
+    private String Title;
+    private long GlfwWindow;
+
+
     public Window()
     {
-        this.m_Width = 1920;
-        this.m_Height = 1080;
-        this.m_Title = "Testing";
+        this.Width = 1920;
+        this.Height = 1080;
+        this.Title = "Testing";
         init();
 
-        sceneManager = new SceneManager();
-        sceneManager.addScene(new LevelEditorScene("LEVEL EDITOR SCENE", 0));
-        sceneManager.addScene(new LevelScene("LEVEL SCENE", 1));
-        sceneManager.setCurrentScene(0);
-        sceneManager.getCurrentScene().Init();
+        SceneManager = new SceneManager();
+        SceneManager.addScene(new LevelEditorScene("LEVEL EDITOR SCENE", 0));
+        SceneManager.addScene(new LevelScene("LEVEL SCENE", 1));
+        SceneManager.loadScene(0);
     }
 
     public void run()
@@ -35,7 +39,7 @@ public class Window
         float beginTime = Timer.getTime();
         float endTime = Timer.getTime();
 
-        while(!glfwWindowShouldClose(m_GlfwWindow))
+        while(!glfwWindowShouldClose(GlfwWindow))
         {
             // Pool Events
             glfwPollEvents();
@@ -46,38 +50,32 @@ public class Window
 
             glClear(GL_COLOR_BUFFER_BIT);
             glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-            sceneManager.getCurrentScene().update(dt);
-            glfwSwapBuffers(m_GlfwWindow);
+            SceneManager.updateScene(dt);
+            glfwSwapBuffers(GlfwWindow);
 
             if(KeyListener.isKeyPressed(KeyEvent.VK_1))
             {
-                sceneManager.setCurrentScene(1);
-                sceneManager.getCurrentScene().Init();
+                SceneManager.setCurrentScene(1);
+                SceneManager.getCurrentScene().Init();
             }
             if(KeyListener.isKeyPressed(KeyEvent.VK_0))
             {
-                sceneManager.setCurrentScene(0);
-                sceneManager.getCurrentScene().Init();
+                SceneManager.setCurrentScene(0);
+                SceneManager.getCurrentScene().Init();
             }
 
         }
 
         // Free the Memory
-        glfwFreeCallbacks(m_GlfwWindow);
-        glfwDestroyWindow(m_GlfwWindow);
+        glfwFreeCallbacks(GlfwWindow);
+        glfwDestroyWindow(GlfwWindow);
 
         // Terminate GLFW and free memory of error callback
         glfwTerminate();
         glfwSetErrorCallback(null).free();
     }
 
-
-
     private void glfwFreeCallbacks(long mGlfwWindow) { }
-    private SceneManager sceneManager;
-    private int m_Width, m_Height;
-    private String m_Title;
-    private long m_GlfwWindow;
 
     private void init()
     {
@@ -93,27 +91,27 @@ public class Window
         glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 
         // Create the Window
-        m_GlfwWindow = glfwCreateWindow(this.m_Width, this.m_Height, this.m_Title, NULL, NULL);
-        if(m_GlfwWindow == NULL)
+        GlfwWindow = glfwCreateWindow(this.Width, this.Height, this.Title, NULL, NULL);
+        if(GlfwWindow == NULL)
         {
             throw new IllegalStateException("Failed to create the GLFW window.");
         }
 
         // Mouse CallBacks
-        glfwSetCursorPosCallback(m_GlfwWindow, MouseListener::mousePosCallback);
-        glfwSetMouseButtonCallback(m_GlfwWindow, MouseListener::mouserButtonCallback);
-        glfwSetScrollCallback(m_GlfwWindow, MouseListener::mouseScrollCallback);
+        glfwSetCursorPosCallback(GlfwWindow, MouseListener::mousePosCallback);
+        glfwSetMouseButtonCallback(GlfwWindow, MouseListener::mouserButtonCallback);
+        glfwSetScrollCallback(GlfwWindow, MouseListener::mouseScrollCallback);
 
         // Key Listeners
-        glfwSetKeyCallback(m_GlfwWindow, KeyListener::keyCallback);
+        glfwSetKeyCallback(GlfwWindow, KeyListener::keyCallback);
 
         // Make the OpenGL context current
-        glfwMakeContextCurrent(m_GlfwWindow);
+        glfwMakeContextCurrent(GlfwWindow);
         // Enable v-sync
         glfwSwapInterval(1);
 
         // Make the Window Visible
-        glfwShowWindow(m_GlfwWindow);
+        glfwShowWindow(GlfwWindow);
 
         // This line is critical for LWJGL's interoperation with GLFW's
         // OpenGL context, or any context that is managed externally.

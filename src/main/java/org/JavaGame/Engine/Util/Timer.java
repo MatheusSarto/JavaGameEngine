@@ -5,7 +5,7 @@ import java.time.Instant;
 
 public class Timer
 {
-    public static float TimeStarted = System.nanoTime();
+    private static final float TimeStarted = System.nanoTime();
 
     public static float getTime()
     {

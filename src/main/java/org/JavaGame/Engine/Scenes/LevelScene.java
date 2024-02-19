@@ -1,7 +1,5 @@
 package org.JavaGame.Engine.Scenes;
 
-import static org.lwjgl.opengl.GL11.*;
-
 public class LevelScene extends Scene
 {
     public LevelScene(String name, int id)

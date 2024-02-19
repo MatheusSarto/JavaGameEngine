@@ -12,10 +12,16 @@ import static org.lwjgl.opengl.GL20.*;
 
 public class Shader
 {
+    private int ShaderProgramID;
+    private String VertexSource;
+    private String FragmentSrouce;
+    private String FilePath;
+    private boolean BeingUsed;
+
     public Shader(String filepath)
     {
-        m_BeingUsed = false;
-        this.m_FilePath = filepath;
+        BeingUsed = false;
+        this.FilePath = filepath;
         try
         {
             // Splitting file content
@@ -34,18 +40,18 @@ public class Shader
 
             if(firstPattern.equals("vertex"))
             {
-                m_VertexSource = splitString[1];
+                VertexSource = splitString[1];
             } else if(firstPattern.equals("fragment")) {
-                m_FragmentSrouce = splitString[1];
+                FragmentSrouce = splitString[1];
             }else {
                 throw new IOException("UNEXPECTED TOKEN: '" + firstPattern + "' in '" + filepath + "'");
             }
 
             if(secondPattern.equals("vertex"))
             {
-                m_VertexSource = splitString[2];
+                VertexSource = splitString[2];
             } else if(secondPattern.equals("fragment")) {
-                m_FragmentSrouce = splitString[2];
+                FragmentSrouce = splitString[2];
             }else {
                 throw new IOException("UNEXPECTED TOKEN: '" + firstPattern + "' in '" + filepath + "'");
             }
@@ -64,7 +70,7 @@ public class Shader
         // First, load and compile the vertex shader
         vertexID = glCreateShader(GL_VERTEX_SHADER);
         // Pass the shader source code
-        glShaderSource(vertexID, m_VertexSource);
+        glShaderSource(vertexID, VertexSource);
         glCompileShader(vertexID);
 
         // Check for errors in compilation
@@ -72,7 +78,7 @@ public class Shader
         if(success == GL_FALSE)
         {
             int len = glGetShaderi(vertexID, GL_INFO_LOG_LENGTH);
-            System.out.println("ERROR: IN " + m_FilePath + " VERTEX SHADER COMPILATION FAILED");
+            System.out.println("ERROR: IN " + FilePath + " VERTEX SHADER COMPILATION FAILED");
             System.out.println(glGetShaderInfoLog(vertexID, len));
             assert false : "";
         }
@@ -81,7 +87,7 @@ public class Shader
         // First, load and compile the fragment shader
         fragmentID = glCreateShader(GL_FRAGMENT_SHADER);
         // Pass the shader source code
-        glShaderSource(fragmentID, m_FragmentSrouce);
+        glShaderSource(fragmentID, FragmentSrouce);
         glCompileShader(fragmentID);
 
         // Check for errors in compilation
@@ -89,25 +95,25 @@ public class Shader
         if(success == GL_FALSE)
         {
             int len = glGetShaderi(fragmentID, GL_INFO_LOG_LENGTH);
-            System.out.println("ERROR: IN " + m_FilePath + " FRAGMENT SHADER COMPILATION FAILED");
+            System.out.println("ERROR: IN " + FilePath + " FRAGMENT SHADER COMPILATION FAILED");
             System.out.println(glGetShaderInfoLog(fragmentID, len));
             assert false : "";
         }
 
         // Link shaders and check for erros
-        m_ShaderProgramID = glCreateProgram();
-        glAttachShader(m_ShaderProgramID, vertexID);
-        glAttachShader(m_ShaderProgramID, fragmentID);
-        glLinkProgram(m_ShaderProgramID);
+        ShaderProgramID = glCreateProgram();
+        glAttachShader(ShaderProgramID, vertexID);
+        glAttachShader(ShaderProgramID, fragmentID);
+        glLinkProgram(ShaderProgramID);
 
         // check for linkin erros
-        success = glGetProgrami(m_ShaderProgramID, GL_LINK_STATUS);
+        success = glGetProgrami(ShaderProgramID, GL_LINK_STATUS);
 
         if(success == GL_FALSE)
         {
-            int len = glGetProgrami(m_ShaderProgramID, GL_INFO_LOG_LENGTH);
-            System.out.println("ERROR: IN " + m_FilePath + " LINKIN OF SHADERS FAILED");
-            System.out.println(glGetProgramInfoLog(m_ShaderProgramID, len));
+            int len = glGetProgrami(ShaderProgramID, GL_INFO_LOG_LENGTH);
+            System.out.println("ERROR: IN " + FilePath + " LINKIN OF SHADERS FAILED");
+            System.out.println(glGetProgramInfoLog(ShaderProgramID, len));
             assert false : "";
         }
 
@@ -115,11 +121,11 @@ public class Shader
 
     public void bind()
     {
-        if(!m_BeingUsed)
+        if(!BeingUsed)
         {
             // Bind shader program
-            glUseProgram(m_ShaderProgramID);
-            m_BeingUsed = true;
+            glUseProgram(ShaderProgramID);
+            BeingUsed = true;
         }
 
     }
@@ -127,12 +133,12 @@ public class Shader
     public void detach()
     {
         glUseProgram(0);
-        m_BeingUsed = false;
+        BeingUsed = false;
     }
 
     public void uploadMat4f(String varName, Matrix4f mat4)
     {
-        int varLocation = glGetUniformLocation(m_ShaderProgramID, varName);
+        int varLocation = glGetUniformLocation(ShaderProgramID, varName);
         bind();
         FloatBuffer matBuffer = BufferUtils.createFloatBuffer(16);
         mat4.get(matBuffer);
@@ -141,7 +147,7 @@ public class Shader
 
     public void uploadMat3f(String varName, Matrix3f mat3)
     {
-        int varLocation = glGetUniformLocation(m_ShaderProgramID, varName);
+        int varLocation = glGetUniformLocation(ShaderProgramID, varName);
         bind();
         FloatBuffer matBuffer = BufferUtils.createFloatBuffer(9);
         mat3.get(matBuffer);
@@ -151,50 +157,43 @@ public class Shader
 
     public void uploadVec4f(String varName, Vector4f vec)
     {
-        int varLocation = glGetUniformLocation(m_ShaderProgramID, varName);
+        int varLocation = glGetUniformLocation(ShaderProgramID, varName);
         bind();
         glUniform4f(varLocation, vec.x, vec.y, vec.z, vec.w);
     }
 
     public void uploadVec3f(String varName, Vector4f vec)
     {
-        int varLocation = glGetUniformLocation(m_ShaderProgramID, varName);
+        int varLocation = glGetUniformLocation(ShaderProgramID, varName);
         bind();
         glUniform3f(varLocation, vec.x, vec.y, vec.z);
     }
 
     public void uploadVec2f(String varName, Vector4f vec)
     {
-        int varLocation = glGetUniformLocation(m_ShaderProgramID, varName);
+        int varLocation = glGetUniformLocation(ShaderProgramID, varName);
         bind();
         glUniform2f(varLocation, vec.x, vec.y);
     }
 
     public void uploadFloat(String varName, float value)
     {
-        int varLocation = glGetUniformLocation(m_ShaderProgramID, varName);
+        int varLocation = glGetUniformLocation(ShaderProgramID, varName);
         bind();
         glUniform1f(varLocation, value);
     }
 
     public void uploadInt(String varName, int value)
     {
-        int varLocation = glGetUniformLocation(m_ShaderProgramID, varName);
+        int varLocation = glGetUniformLocation(ShaderProgramID, varName);
         bind();
         glUniform1i(varLocation, value);
     }
 
     public void uploadTexture(String varName, int slot)
     {
-        int varLocation = glGetUniformLocation(m_ShaderProgramID, varName);
+        int varLocation = glGetUniformLocation(ShaderProgramID, varName);
         bind();
         glUniform1i(varLocation, slot);
     }
-
-
-    private int m_ShaderProgramID;
-    private String m_VertexSource;
-    private String m_FragmentSrouce;
-    private String m_FilePath;
-    private boolean m_BeingUsed;
 }

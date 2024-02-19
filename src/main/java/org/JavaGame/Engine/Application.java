@@ -1,25 +1,25 @@
 package org.JavaGame.Engine;
 
-import org.JavaGame.Engine.Util.Timer;
 import org.lwjgl.glfw.GLFWErrorCallback;
 
 public class Application
 {
+
+    private Window Window;
+    private boolean Running;
+
+
     public Application()
     {
         // Setup error callback
         GLFWErrorCallback.createPrint(System.err).set();
 
-        this.m_Window = new Window();
-        m_Running = true;
+        this.Window = new Window();
+        Running = true;
     }
 
     public void run()
     {
-        m_Window.run();
+        Window.run();
     }
-
-
-    private Window m_Window;
-    private boolean m_Running;
 }

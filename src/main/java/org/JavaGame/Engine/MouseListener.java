@@ -1,112 +1,107 @@
 package org.JavaGame.Engine;
 
-import org.lwjgl.glfw.GLFW;
-
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 public class MouseListener
 {
+    private static MouseListener Instance;
+    private double ScrollX, ScrollY;
+    private double xPos, yPos, lastY, lastX;
+    private boolean MouseButtonPressed[] = new boolean[3];
+    private boolean IsDragging;
+
+    public MouseListener()
+    {
+        this.ScrollX = 0.0f;
+        this.ScrollY = 0.0f;
+        this.xPos = 0.0f;
+        this.yPos = 0.0f;
+        this.lastX = 0.0f;
+        this.lastY = 0.0f;
+    }
+
     public static MouseListener get()
     {
-        if(MouseListener.instance == null)
+        if(MouseListener.Instance == null)
         {
-            MouseListener.instance = new MouseListener();
+            MouseListener.Instance = new MouseListener();
         }
-        return MouseListener.instance;
+        return MouseListener.Instance;
     }
 
     public static void mousePosCallback(long window, double xpos, double ypos)
     {
-        get().m_lastX = get().m_xPos;
-        get().m_lastY = get().m_yPos;
+        get().lastX = get().xPos;
+        get().lastY = get().yPos;
 
-        get().m_xPos = xpos;
-        get().m_yPos = ypos;
+        get().xPos = xpos;
+        get().yPos = ypos;
 
-        get().m_isDragging = get().m_mouseButtonPressed[0] || get().m_mouseButtonPressed[1] || get().m_mouseButtonPressed[2];
+        get().IsDragging = get().MouseButtonPressed[0] || get().MouseButtonPressed[1] || get().MouseButtonPressed[2];
     }
 
     public static void mouserButtonCallback(long window, int button, int action, int mods)
     {
-        if(button > get().m_mouseButtonPressed.length) { return; }
+        if(button > get().MouseButtonPressed.length) { return; }
         if(action == GLFW_PRESS)
         {
-            get().m_mouseButtonPressed[button] = true;
+            get().MouseButtonPressed[button] = true;
         }
         else if(action == GLFW_RELEASE)
         {
-            get().m_mouseButtonPressed[button] = false;
-            get().m_isDragging = false;
+            get().MouseButtonPressed[button] = false;
+            get().IsDragging = false;
         }
     }
 
     public static void mouseScrollCallback(long window, double xOffSet,double yOffSet)
     {
-        get().m_ScrollX = xOffSet;
-        get().m_ScrollY = yOffSet;
+        get().ScrollX = xOffSet;
+        get().ScrollY = yOffSet;
     }
 
     public static void endFrame()
     {
-        get().m_ScrollX = 0.0f;
-        get().m_ScrollY = 0.0f;
-        get().m_lastX   = get().m_xPos;
-        get().m_lastY   = get().m_yPos;
+        get().ScrollX = 0.0f;
+        get().ScrollY = 0.0f;
+        get().lastX = get().xPos;
+        get().lastY = get().yPos;
     }
 
     public static float getX()
     {
-        return (float)get().m_xPos;
+        return (float)get().xPos;
     }
     public static float getY()
     {
-        return (float)get().m_yPos;
+        return (float)get().yPos;
     }
     public static float getDx()
     {
-        return (float)(get().m_lastX - get().m_xPos);
+        return (float)(get().lastX - get().xPos);
     }
     public static float getDy()
     {
-        return (float)(get().m_lastY - get().m_yPos);
+        return (float)(get().lastY - get().yPos);
     }
     public static float getScrollX()
     {
-        return (float)get().m_ScrollX;
+        return (float)get().ScrollX;
     }
     public static float getScrollY()
     {
-        return (float)get().m_ScrollY;
+        return (float)get().ScrollY;
     }
     public static boolean isDraggin()
     {
-        return get().m_isDragging;
+        return get().IsDragging;
     }
     public static boolean mouseButtonDown(int button)
     {
-        if(button > get().m_mouseButtonPressed.length)
+        if(button > get().MouseButtonPressed.length)
         {
             return false;
         }
-        return get().m_mouseButtonPressed[button];
+        return get().MouseButtonPressed[button];
     }
-
-
-    private static MouseListener instance;
-    private double m_ScrollX, m_ScrollY;
-    private double m_xPos, m_yPos, m_lastY, m_lastX;
-    private boolean m_mouseButtonPressed[] = new boolean[3];
-    private boolean m_isDragging;
-
-    public MouseListener()
-    {
-        this.m_ScrollX  = 0.0f;
-        this.m_ScrollY  = 0.0f;
-        this.m_xPos     = 0.0f;
-        this.m_yPos     = 0.0f;
-        this.m_lastX    = 0.0f;
-        this.m_lastY    = 0.0f;
-    }
-
-
 }

@@ -7,67 +7,61 @@ import java.util.List;
 
 public class SceneManager
 {
+    private static List<Scene> Scenes;
+    private static int CurrentScene;
+
+
     public SceneManager()
     {
-        m_Scenes = new ArrayList<>();
-        m_CurrentScene = 0;
+        Scenes = new ArrayList<>();
+        CurrentScene = 0;
     }
-
-    private List<Scene> m_Scenes;
-    private int m_CurrentScene;
-
-    public Scene loadScene(int sceneid)
+    public void loadScene(int sceneid)
     {
-        Scene newscene = m_Scenes.stream().filter(scene -> sceneid == scene.getId())
+        Scene newscene = Scenes.stream().filter(scene -> sceneid == scene.getId())
                 .findAny()
                 .orElseThrow( RuntimeException::new );
-        m_CurrentScene = m_Scenes.indexOf(newscene);
+        CurrentScene = Scenes.indexOf(newscene);
         getCurrentScene().Init();
-
-        return newscene;
     }
-    public Scene loadScene(String name)
+    public void loadScene(String name)
     {
-        Scene newscene = m_Scenes.stream().filter(scene -> name.equals(scene.getName()))
+        Scene newscene = Scenes.stream().filter(scene -> name.equals(scene.getName()))
                 .findAny()
                 .orElseThrow( RuntimeException::new );
-        m_CurrentScene = m_Scenes.indexOf(newscene);
+        CurrentScene = Scenes.indexOf(newscene);
         getCurrentScene().Init();
-
-        return newscene;
     }
 
     public void addScene(Scene scene)
     {
-        m_Scenes.add(scene);
+        Scenes.add(scene);
     }
-
+    public static Scene getCurrentScene()
+    {
+        return Scenes.get(CurrentScene);
+    }
     public String getCurrentSceneName()
     {
-        return m_Scenes.get(m_CurrentScene).getName();
+        return Scenes.get(CurrentScene).getName();
     }
-
     public int getCurrentSceneId()
     {
-        return m_Scenes.get(m_CurrentScene).getId();
+        return Scenes.get(CurrentScene).getId();
     }
 
-    public Scene getCurrentScene()
-    {
-        return m_Scenes.get(m_CurrentScene);
-    }
 
     public void updateScene(float dt)
     {
-        m_Scenes.get(m_CurrentScene).update(dt);
+        Scenes.get(CurrentScene).update(dt);
     }
 
     public void setCurrentScene(int sceneid)
     {
-        Scene sceneget = m_Scenes.stream().filter(scene -> sceneid == scene.getId())
+        Scene sceneget = Scenes.stream().filter(scene -> sceneid == scene.getId())
             .findAny()
             .orElseThrow( RuntimeException::new );
 
-        m_CurrentScene = m_Scenes.indexOf(sceneget);
+        CurrentScene = Scenes.indexOf(sceneget);
     }
 }

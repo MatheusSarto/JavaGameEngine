@@ -1,40 +1,53 @@
 package org.JavaGame.Engine;
 
+import org.JavaGame.Engine.Components.Component;
+import org.JavaGame.Engine.Components.Transform;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameObject implements Runnable
+public class GameObject
 {
+    public org.JavaGame.Engine.Components.Transform Transform;
+    private String Name;
+    private List<Component> Components;
+
     public GameObject(String name)
     {
-        this.m_Name = name;
-        this.m_Components = new ArrayList<>();
+        this.Name = name;
+        this.Components = new ArrayList<>();
+        this.Transform = new Transform();
     }
 
-    @Override
+    public GameObject(String name, Transform transform)
+    {
+        this.Name = name;
+        this.Components = new ArrayList<>();
+        this.Transform = transform;
+    }
+
     public void update(float dt)
     {
-        System.out.println("UPDATE: PRINTING FROM " + m_Name);
+        //System.out.println("UPDATE: PRINTING FROM " + Name);
 
-        for(int i = 0; i < m_Components.size(); i++)
+        for(int i = 0; i < Components.size(); i++)
         {
-            m_Components.get(i).update(dt);
+            Components.get(i).update(dt);
         }
     }
 
-    @Override
     public void Init()
     {
-        System.out.println("INIT: PRINTING FROM " + m_Name);
-        for(int i = 0; i < m_Components.size(); i++)
+        //System.out.println("INIT: PRINTING FROM " + Name);
+        for(int i = 0; i < Components.size(); i++)
         {
-            m_Components.get(i).Init();
+            Components.get(i).Init();
         }
     }
 
     public <T extends Component> T getComponent(Class<T> componentClass)
     {
-        for(Component c : m_Components)
+        for(Component c : Components)
         {
 
             if(componentClass.isAssignableFrom(c.getClass()))
@@ -55,12 +68,12 @@ public class GameObject implements Runnable
 
     public <T extends Component> void removerComponent(Class<T> componentClass)
     {
-        for(int i = 0; i < m_Components.size(); i++)
+        for(int i = 0; i < Components.size(); i++)
         {
-            Component c = m_Components.get(i);
+            Component c = Components.get(i);
             if(componentClass.isAssignableFrom(c.getClass()))
             {
-                m_Components.remove(i);
+                Components.remove(i);
                 return;
             }
         }
@@ -68,10 +81,7 @@ public class GameObject implements Runnable
 
     public void addComponent(Component component)
     {
-        m_Components.add(component);
-        component.gameObject = this;
+        Components.add(component);
+        component.setGameObject(this);
     }
-
-    private String m_Name;
-    private List<Component> m_Components;
 }

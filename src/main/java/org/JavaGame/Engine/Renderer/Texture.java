@@ -2,23 +2,23 @@ package org.JavaGame.Engine.Renderer;
 
 import org.lwjgl.BufferUtils;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.stb.STBImage.*;
 
 public class Texture
 {
+    private String FilePath;
+    private int TextureID;
+
     public Texture(String filepath)
     {
-        this.m_FilePath = filepath;
+        this.FilePath = filepath;
         // Generate texture on GPU
-        m_TextureID = glGenTextures();
-        glBindTexture(GL_TEXTURE_2D, m_TextureID);
+        TextureID = glGenTextures();
+        glBindTexture(GL_TEXTURE_2D, TextureID);
 
         // Set texture parameters
         // Repeat image in both directions
@@ -44,22 +44,18 @@ public class Texture
         }
         else
         {
-            assert false : "ERROR: (TEXTURE) COULD NOT LOAD IMAGE '" + m_FilePath + "'";
+            assert false : "ERROR: (TEXTURE) COULD NOT LOAD IMAGE '" + FilePath + "'";
         }
 
         stbi_image_free(image);
     }
-
     public void bind()
     {
-        glBindTexture(GL_TEXTURE_2D, m_TextureID);
+        glBindTexture(GL_TEXTURE_2D, TextureID);
     }
 
     public void unbind()
     {
         glBindTexture(GL_TEXTURE_2D, 0);
     }
-
-    private String m_FilePath;
-    private int m_TextureID;
 }

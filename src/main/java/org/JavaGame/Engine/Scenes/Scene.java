@@ -2,47 +2,60 @@ package org.JavaGame.Engine.Scenes;
 
 import org.JavaGame.Engine.Camera;
 import org.JavaGame.Engine.GameObject;
+import org.JavaGame.Engine.Renderer.Renderer;
 import org.JavaGame.Engine.Runnable;
+import org.joml.Vector2f;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Scene implements Runnable
 {
-    protected Camera m_Camera;
-    private boolean m_IsRunning = false;
-    protected List<GameObject> m_GameObjects = new ArrayList<>();
+    protected Camera Camera;
+    protected List<GameObject> GameObjects = new ArrayList<>();
+    protected final Renderer Renderer;
+    private boolean IsRunning = false;
+    private final String Name;
+    private final int Id;
+
 
     public Scene(String name, int  id)
     {
-        m_Name  = name;
-        m_Id    = id;
+        this.Name = name;
+        this.Id = id;
+        this.Camera = new Camera(new Vector2f());
+        this.Renderer = new Renderer();
     }
 
     @Override
     public void Init()
     {
-        for(GameObject gameObject : m_GameObjects)
+        for(GameObject gameObject : GameObjects)
         {
             gameObject.Init();
+            this.Renderer.add(gameObject);
         }
-        m_IsRunning = true;
+        IsRunning = true;
     }
     public void addGameObjectToScene(GameObject gameObject)
     {
-        if(!m_IsRunning)
+        if(!IsRunning)
         {
-            m_GameObjects.add(gameObject);
+            GameObjects.add(gameObject);
         }
         else
         {
-            m_GameObjects.add(gameObject);
+            GameObjects.add(gameObject);
             gameObject.Init();
+            this.Renderer.add(gameObject);
         }
     }
 
-    public String getName() { return this.m_Name; }
-    public int getId() { return this.m_Id; }
-    private String m_Name;
-    private int m_Id;
+    public Camera getCamera()
+    {
+        return this.Camera;
+    }
+
+    public String getName() { return this.Name; }
+    public int getId() { return this.Id; }
 }
