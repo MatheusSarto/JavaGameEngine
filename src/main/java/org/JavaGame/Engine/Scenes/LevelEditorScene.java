@@ -4,6 +4,7 @@ import org.JavaGame.Engine.Camera;
 import org.JavaGame.Engine.Components.SpriteRender;
 import org.JavaGame.Engine.GameObject;
 import org.JavaGame.Engine.Components.Transform;
+import org.JavaGame.Engine.Util.AssetPool;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
@@ -53,5 +54,12 @@ public class LevelEditorScene extends Scene
                 this.addGameObjectToScene(go);
             }
         }
+
+        loadResources();
+    }
+
+    private void loadResources()
+    {
+        AssetPool.getShader("assets/shaders/default.glsl");
     }
 }

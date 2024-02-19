@@ -1,6 +1,7 @@
 package org.JavaGame.Engine.Renderer;
 
 import org.JavaGame.Engine.Components.SpriteRender;
+import org.JavaGame.Engine.Util.AssetPool;
 import org.JavaGame.Engine.Util.SceneManager;
 import org.joml.Vector4f;
 
@@ -33,9 +34,8 @@ public class RenderBatch
     public RenderBatch(int maxBatchSize)
     {
         this.MaxBatchSize = maxBatchSize;
-        Shader = new Shader("assets/shaders/default.glsl");
-        Shader.compile();
-        this.Sprites = new SpriteRender[MaxBatchSize];
+        Shader = AssetPool.getShader("assets/shaders/default.glsl");
+        this.Sprites = new SpriteRender[maxBatchSize];
 
         // 4 Vertices Quads
         Vertices = new float[maxBatchSize * 4 * VERTEX_SIZE];
