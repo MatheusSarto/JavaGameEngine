@@ -12,6 +12,8 @@ public class Texture
 {
     private String FilePath;
     private int TextureID;
+    private int Width;
+    private int Height;
 
     public Texture(String filepath)
     {
@@ -29,18 +31,31 @@ public class Texture
         // When shrinking an image, pixelate
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-        // Solving problem of textures being rendered upside down
-        stbi_set_flip_vertically_on_load(true);
-
         // Load image
         IntBuffer width     = BufferUtils.createIntBuffer(1);
         IntBuffer height    = BufferUtils.createIntBuffer(1);
         IntBuffer channels  = BufferUtils.createIntBuffer(1);
+        // Solving problem of textures being rendered upside down
+        stbi_set_flip_vertically_on_load(true);
         ByteBuffer image = stbi_load(filepath, width, height, channels, 0);
 
         if(image != null)
         {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width.get(0), height.get(0), 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+            this.Width = width.get(0);
+            this.Height = height.get(0);
+
+            if(channels.get(0) == 3)
+            {
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width.get(0), height.get(0), 0, GL_RGB, GL_UNSIGNED_INT, image);
+            }
+            else if(channels.get(0) == 4)
+            {
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width.get(0), height.get(0), 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+            }
+            else
+            {
+                assert false : "ERROR: (TEXTURE) UNKOWN NUMBER OF CHANNELS '" + channels.get(0) + "'";
+            }
         }
         else
         {
@@ -57,5 +72,15 @@ public class Texture
     public void unbind()
     {
         glBindTexture(GL_TEXTURE_2D, 0);
+    }
+
+    public int getWidth()
+    {
+        return this.Width;
+    }
+
+    public  int getHeight()
+    {
+        return this.Height;
     }
 }

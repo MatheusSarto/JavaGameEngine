@@ -8,7 +8,7 @@ import java.util.List;
 
 public class GameObject
 {
-    public org.JavaGame.Engine.Components.Transform Transform;
+    public Transform Transform;
     private String Name;
     private List<Component> Components;
 
@@ -83,5 +83,10 @@ public class GameObject
     {
         Components.add(component);
         component.setGameObject(this);
+    }
+
+    public float getZindex()
+    {
+        return this.Transform.getPosition().z;
     }
 }

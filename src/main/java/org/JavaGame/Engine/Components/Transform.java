@@ -1,34 +1,35 @@
 package org.JavaGame.Engine.Components;
 
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 
 public class Transform
 {
-    private Vector2f Position;
+    private Vector3f Position;
     private Vector2f Scale;
 
 
-    private void Init(Vector2f position, Vector2f scale)
+    private void Init(Vector3f position, Vector2f scale)
     {
         this.Position   = position;
         this.Scale      = scale;
     }
     public Transform()
     {
-        Init(new Vector2f(), new Vector2f());
+        Init(new Vector3f(), new Vector2f());
     }
 
-    public Transform(Vector2f position)
+    public Transform(Vector3f position)
     {
         Init(position, new Vector2f());
     }
 
-    public Transform(Vector2f position, Vector2f scale)
+    public Transform(Vector3f position, Vector2f scale)
     {
        Init(position, scale);
     }
 
-    public Vector2f getPosition()
+    public Vector3f getPosition()
     {
         return  Position;
     }
@@ -38,7 +39,7 @@ public class Transform
         return Scale;
     }
 
-    public void setPosition(Vector2f position)
+    public void setPosition(Vector3f position)
     {
         this.Position = position;
     }
@@ -48,10 +49,30 @@ public class Transform
         this.Scale = scale;
     }
 
-    public void setPositionScale(Vector2f position, Vector2f scale)
+    public void setPositionScale(Vector3f position, Vector2f scale)
     {
         this.Position   = position;
         this.Scale      = scale;
     }
 
+    public Transform copy()
+    {
+        return new Transform(new Vector3f(this.Position), new Vector2f(this.Scale));
+    }
+
+    public void copy(Transform to)
+    {
+        to.Position.set(this.Position);
+        to.Scale.set(this.Scale);
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if(o == null) return false;
+        if(!(o instanceof Transform)) return false;
+
+        Transform t = (Transform)o;
+        return t.Position.equals(this.Position) && t.Scale.equals(this.Scale);
+    }
 }

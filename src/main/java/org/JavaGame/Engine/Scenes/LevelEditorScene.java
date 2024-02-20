@@ -2,15 +2,20 @@ package org.JavaGame.Engine.Scenes;
 
 import org.JavaGame.Engine.Camera;
 import org.JavaGame.Engine.Components.SpriteRender;
+import org.JavaGame.Engine.Components.SpriteSheet;
 import org.JavaGame.Engine.GameObject;
 import org.JavaGame.Engine.Components.Transform;
 import org.JavaGame.Engine.Util.AssetPool;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 
 public class LevelEditorScene extends Scene
 {
+    private GameObject obj1;
+    private GameObject obj2;
+
     public LevelEditorScene(String name, int id)
     {
         super(name, id);
@@ -19,47 +24,22 @@ public class LevelEditorScene extends Scene
     @Override
     public void update(float dt)
     {
-        // Update all game objects
-        for(GameObject gameobject : GameObjects)
-        {
-            gameobject.update(dt);
-        }
-        this.Renderer.render();
+        super.update(dt);
     }
 
     @Override
     public void Init()
     {
-        // Calls 'Scene' Init method
         super.Init();
+        SpriteSheet sprites = AssetPool.getSpriteSheet("assets/images/spritesheet.png");
 
-        int xOffset = 10;
-        int yOffset = 10;
+        obj1 = new GameObject("obj1", new Transform(new Vector3f(100, 100, 1), new Vector2f(256, 256)));
 
-        float totalWidth = (float)(600 - xOffset * 2);
-        float totalHeight = (float)(300 - yOffset * 2);
+        obj1.addComponent(new SpriteRender(sprites.getSprite(0)));
+        this.addGameObjectToScene(obj1);
 
-        float sizeX = totalWidth / 100.0f;
-        float sizeY = totalHeight / 100.0f;
-
-        for(int x = 0; x < 100; x++)
-        {
-            for(int y = 0; y < 100; y++)
-            {
-                float xPos = xOffset + (x * sizeX);
-                float yPos = yOffset + (y * sizeY);
-
-                GameObject go = new GameObject("OBJ " + x + "" + y, new Transform(new Vector2f(xPos, yPos), new Vector2f(sizeX, sizeY)));
-                go.addComponent(new SpriteRender(new Vector4f(xPos /  totalWidth, yPos / totalHeight, 1, 1)));
-                this.addGameObjectToScene(go);
-            }
-        }
-
-        loadResources();
-    }
-
-    private void loadResources()
-    {
-        AssetPool.getShader("assets/shaders/default.glsl");
+        obj2 = new GameObject("obj2", new Transform(new Vector3f(100, 100,0), new Vector2f(256, 256)));
+        obj2.addComponent(new SpriteRender(sprites.getSprite(1)));
+        this.addGameObjectToScene(obj2);
     }
 }

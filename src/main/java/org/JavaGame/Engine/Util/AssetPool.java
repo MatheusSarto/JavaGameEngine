@@ -1,5 +1,7 @@
 package org.JavaGame.Engine.Util;
 
+import org.JavaGame.Engine.Components.Sprite;
+import org.JavaGame.Engine.Components.SpriteSheet;
 import org.JavaGame.Engine.Renderer.Shader;
 import org.JavaGame.Engine.Renderer.Texture;
 import org.lwjgl.system.CallbackI;
@@ -12,6 +14,7 @@ public class AssetPool
 {
     private static Map<String, Shader> ShaderMap = new HashMap<>();
     private static Map<String, Texture> TextureMap = new HashMap<>();
+    private static Map<String, SpriteSheet> SpriteSheetMap = new HashMap<>();
 
     public static Shader getShader(String resourceName)
     {
@@ -46,4 +49,22 @@ public class AssetPool
         }
     }
 
+    public static void addSpriteSheet(String resourceName, SpriteSheet spriteSheet)
+    {
+        File file = new File(resourceName);
+        if(!AssetPool.SpriteSheetMap.containsKey(file.getAbsolutePath()))
+        {
+            AssetPool.SpriteSheetMap.put(file.getAbsolutePath(), spriteSheet);
+        }
+    }
+
+    public static SpriteSheet getSpriteSheet(String resourceName)
+    {
+        File file = new File(resourceName);
+        if(!AssetPool.SpriteSheetMap.containsKey(file.getAbsolutePath()))
+        {
+            assert false : "ERROR: TRIED TO ACCESS SPRITESHEET '" + resourceName + "' AND IT HAS NOT BEEN ADDED TO ASSET POOL.";
+        }
+        return AssetPool.SpriteSheetMap.getOrDefault(file.getAbsolutePath(), null);
+    }
 }

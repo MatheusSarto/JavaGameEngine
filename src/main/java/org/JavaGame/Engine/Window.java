@@ -3,7 +3,6 @@ package org.JavaGame.Engine;
 import org.JavaGame.Engine.Scenes.LevelEditorScene;
 import org.JavaGame.Engine.Scenes.LevelScene;
 import org.JavaGame.Engine.Util.SceneManager;
-import org.JavaGame.Engine.Util.Timer;
 import org.lwjgl.opengl.GL;
 
 import java.awt.event.KeyEvent;
@@ -36,15 +35,15 @@ public class Window
     public void run()
     {
         System.out.println("RENDER THREAD");
-        float beginTime = Timer.getTime();
-        float endTime = Timer.getTime();
+        float beginTime = (float)glfwGetTime();
+        float endTime = (float)glfwGetTime();
 
         while(!glfwWindowShouldClose(GlfwWindow))
         {
             // Pool Events
             glfwPollEvents();
 
-            endTime = Timer.getTime();
+            endTime = (float)glfwGetTime();
             float dt = endTime - beginTime;
             beginTime = endTime;
 
@@ -119,5 +118,8 @@ public class Window
         // creates the GLCapabilities instance and makes the OpenGL
         // bindings available for use.
         GL.createCapabilities();
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     }
 }
