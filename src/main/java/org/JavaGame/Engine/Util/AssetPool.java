@@ -1,10 +1,7 @@
 package org.JavaGame.Engine.Util;
-
-import org.JavaGame.Engine.Components.Sprite;
 import org.JavaGame.Engine.Components.SpriteSheet;
 import org.JavaGame.Engine.Renderer.Shader;
 import org.JavaGame.Engine.Renderer.Texture;
-import org.lwjgl.system.CallbackI;
 
 import java.io.File;
 import java.util.HashMap;

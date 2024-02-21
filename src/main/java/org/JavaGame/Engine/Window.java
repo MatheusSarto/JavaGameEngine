@@ -1,5 +1,8 @@
 package org.JavaGame.Engine;
 
+import org.JavaGame.Engine.ImGui.ImGuiLayer;
+import org.JavaGame.Engine.Listeners.KeyListener;
+import org.JavaGame.Engine.Listeners.MouseListener;
 import org.JavaGame.Engine.Scenes.LevelEditorScene;
 import org.JavaGame.Engine.Scenes.LevelScene;
 import org.JavaGame.Engine.Util.SceneManager;
@@ -14,15 +17,17 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class Window
 {
     private SceneManager SceneManager;
-    private int Width, Height;
+    private static int Width;
+    private static int Height;
     private String Title;
     private long GlfwWindow;
+    private ImGuiLayer ImGuiLayer;
 
 
     public Window()
     {
-        this.Width = 1920;
-        this.Height = 1080;
+        Width = 1920;
+        Height = 1080;
         this.Title = "Testing";
         init();
 
@@ -50,6 +55,9 @@ public class Window
             glClear(GL_COLOR_BUFFER_BIT);
             glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
             SceneManager.updateScene(dt);
+
+            this.ImGuiLayer.update(dt);
+
             glfwSwapBuffers(GlfwWindow);
 
             if(KeyListener.isKeyPressed(KeyEvent.VK_1))
@@ -104,6 +112,12 @@ public class Window
         // Key Listeners
         glfwSetKeyCallback(GlfwWindow, KeyListener::keyCallback);
 
+        // Window Resize Callback
+        glfwSetWindowSizeCallback(GlfwWindow, (w, newWidth, newHeight) -> {
+            Window.setWidth(newWidth);
+            Window.setHeight(newHeight);
+        });
+
         // Make the OpenGL context current
         glfwMakeContextCurrent(GlfwWindow);
         // Enable v-sync
@@ -121,5 +135,31 @@ public class Window
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
+        this.ImGuiLayer = new ImGuiLayer(GlfwWindow);
+        this.ImGuiLayer.InitImGui();
+
+
+    }
+
+    public static void setHeight(int newHeight)
+    {
+        Height = newHeight;
+    }
+
+    public static int getWidth()
+    {
+        return Width;
+    }
+    public static void setWidth(int newWidth)
+    {
+        Width = newWidth;
+    }
+
+
+
+    public static int getHeight()
+    {
+        return Height;
     }
 }

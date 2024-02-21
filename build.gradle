@@ -10,9 +10,10 @@ project.ext.jomlVersion = "1.9.23"
 project.ext.steamworks4jVersion = "1.9.0"
 project.ext.steamworks4jserverVersion = "1.9.0"
 project.ext.lwjglNatives = "natives-windows"
-
+project.ext.imguiVersion = '1.76-0.9'
 
 repositories {
+    jcenter()
     mavenCentral()
 }
 
@@ -41,6 +42,12 @@ dependencies {
     runtimeOnly "org.lwjgl:lwjgl-openal::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
+
+    implementation "io.imgui.java:binding:$imguiVersion"
+    implementation "io.imgui.java:lwjgl3:$imguiVersion"
+
+    // Include all available natives, but it's likely that you want something specific
+    runtimeOnly "io.imgui.java:natives-windows:$imguiVersion"
 }
 
 test {

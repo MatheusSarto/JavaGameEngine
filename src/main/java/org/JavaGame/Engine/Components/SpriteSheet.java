@@ -21,10 +21,10 @@ public class SpriteSheet
 
         for(int i = 0; i < numberSprites; i++)
         {
-            float topY = (currentY + spriteHeight) / (float)texture.getHeight();
-            float rightX = (currentX + spriteWidth) / (float)texture.getWidth();
-            float leftX = currentX / (float)texture.getWidth();
-            float bottomY = currentY / (float)texture.getHeight();
+            float topY = (currentY + spriteHeight) / (float)Texture.getHeight();
+            float rightX = (currentX + spriteWidth) / (float)Texture.getWidth();
+            float leftX = currentX / (float)Texture.getWidth();
+            float bottomY = currentY / (float)Texture.getHeight();
 
             Vector2f[] texCoords =
                     {
@@ -34,11 +34,11 @@ public class SpriteSheet
                             new Vector2f(leftX,topY)
                     };
 
-            Sprite sprite = new Sprite(texture, texCoords);
+            Sprite sprite = new Sprite(Texture, texCoords);
             this.Sprites.add(sprite);
 
             currentX += spriteWidth + spacing;
-            if(currentX >= texture.getWidth())
+            if(currentX >= Texture.getWidth())
             {
                 currentX = 0;
                 currentY -= spriteHeight + spacing;
