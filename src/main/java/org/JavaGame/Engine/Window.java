@@ -56,7 +56,7 @@ public class Window
             glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
             SceneManager.updateScene(dt);
 
-            this.ImGuiLayer.update(dt);
+            this.ImGuiLayer.update(dt, SceneManager.getCurrentScene());
 
             glfwSwapBuffers(GlfwWindow);
 

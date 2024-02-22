@@ -15,4 +15,9 @@ public abstract class Component implements Runnable
     {
         this.GameObject = gameobject;
     }
+
+    public void Init() {}
+    public void update(float dt) { }
+
+    public void imgui() { }
 }

@@ -1,5 +1,6 @@
 package org.JavaGame.Engine.Components;
 
+import imgui.ImGui;
 import org.JavaGame.Engine.Renderer.Texture;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
@@ -8,7 +9,7 @@ public class SpriteRender extends Component {
     private Vector4f Color;
     private Sprite Sprite;
     private Transform LastTransform;
-    private boolean IsDirty;
+    private boolean IsDirty = true;
 
     public SpriteRender(Vector4f color)
     {
@@ -75,5 +76,16 @@ public class SpriteRender extends Component {
     public void setClean()
     {
         this.IsDirty = false;
+    }
+
+    @Override
+    public void imgui()
+    {
+        float[] imColors = {Color.x, Color.y, Color.z, Color.w};
+        if(ImGui.colorPicker4("Color picker", imColors))
+        {
+            this.Color.set(imColors[0], imColors[1], imColors[2], imColors[3]);
+            this.IsDirty = true;
+        }
     }
 }

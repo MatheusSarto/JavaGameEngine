@@ -2,8 +2,7 @@ package org.JavaGame.Engine.Renderer;
 
 import org.lwjgl.BufferUtils;
 
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
+import java.nio.*;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.stb.STBImage.*;

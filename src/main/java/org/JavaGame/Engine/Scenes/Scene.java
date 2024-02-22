@@ -1,5 +1,6 @@
 package org.JavaGame.Engine.Scenes;
 
+import imgui.ImGui;
 import org.JavaGame.Engine.Camera;
 import org.JavaGame.Engine.Components.SpriteSheet;
 import org.JavaGame.Engine.GameObject;
@@ -19,6 +20,7 @@ public abstract class Scene implements Runnable
     private boolean IsRunning = false;
     private final String Name;
     private final int Id;
+    protected GameObject ActiveGameobject = null;
 
     public Scene(String name, int  id)
     {
@@ -81,4 +83,17 @@ public abstract class Scene implements Runnable
                 new SpriteSheet(AssetPool.getTexture("assets/images/spritesheet.png"),
                 16, 16, 26, 0));
     }
+
+    public void sceneImgui()
+    {
+        if(ActiveGameobject != null)
+        {
+            ImGui.begin("Inspector");
+            ActiveGameobject.imgui();
+            ImGui.end();
+        }
+
+        imGui();
+    }
+    public void imGui() { }
 }

@@ -89,4 +89,12 @@ public class GameObject
     {
         return this.Transform.getPosition().z;
     }
+
+    public void imgui()
+    {
+        for (Component c : Components)
+        {
+            c.imgui();
+        }
+    }
 }
