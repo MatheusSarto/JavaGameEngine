@@ -10,7 +10,18 @@ public class Sprite
     private Vector2f[] TextCoords;
     private Texture Texture;
 
-    public Sprite(Texture texture)
+    public Sprite()
+    {
+        this.Texture = new Texture();
+        this.TextCoords = new Vector2f[]{
+                new Vector2f(1,1),
+                new Vector2f(1,0),
+                new Vector2f(0,0),
+                new Vector2f(0,1)
+        };
+    }
+
+    public void InitSprite(Texture texture)
     {
         this.Texture = texture;
         this.TextCoords = new Vector2f[]{

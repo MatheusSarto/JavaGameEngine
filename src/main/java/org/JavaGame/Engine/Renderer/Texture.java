@@ -2,7 +2,8 @@ package org.JavaGame.Engine.Renderer;
 
 import org.lwjgl.BufferUtils;
 
-import java.nio.*;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.stb.STBImage.*;
@@ -14,7 +15,12 @@ public class Texture
     private int Width;
     private int Height;
 
-    public Texture(String filepath)
+    public Texture()
+    {
+
+    }
+
+    public void InitTexture(String filepath)
     {
         this.FilePath = filepath;
         // Generate texture on GPU
@@ -63,6 +69,7 @@ public class Texture
 
         stbi_image_free(image);
     }
+
     public void bind()
     {
         glBindTexture(GL_TEXTURE_2D, TextureID);

@@ -8,25 +8,23 @@ public class Transform
     private Vector3f Position;
     private Vector2f Scale;
 
+    public Transform()
+    { }
+    public void InitTransform()
+    {
+        this.Position   = new Vector3f();
+        this.Scale      = new Vector2f();
+    }
 
-    private void Init(Vector3f position, Vector2f scale)
+    public void InitTransform(Vector3f position, Vector2f scale)
     {
         this.Position   = position;
         this.Scale      = scale;
     }
-    public Transform()
+    public void InitTransform(Vector3f position)
     {
-        Init(new Vector3f(), new Vector2f());
-    }
-
-    public Transform(Vector3f position)
-    {
-        Init(position, new Vector2f());
-    }
-
-    public Transform(Vector3f position, Vector2f scale)
-    {
-       Init(position, scale);
+        this.Position   = position;
+        this.Scale      = new Vector2f();
     }
 
     public Vector3f getPosition()
@@ -57,7 +55,11 @@ public class Transform
 
     public Transform copy()
     {
-        return new Transform(new Vector3f(this.Position), new Vector2f(this.Scale));
+        Transform copy = new Transform();
+        copy.InitTransform(new Vector3f(this.Position), new Vector2f(this.Scale));
+
+        return copy;
+
     }
 
     public void copy(Transform to)

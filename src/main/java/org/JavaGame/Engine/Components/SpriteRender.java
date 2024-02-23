@@ -8,21 +8,10 @@ import org.joml.Vector4f;
 public class SpriteRender extends Component {
     private Vector4f Color;
     private Sprite Sprite;
-    private Transform LastTransform;
-    private boolean IsDirty = true;
+    private transient Transform LastTransform;
+    private transient boolean IsDirty = true;
 
-    public SpriteRender(Vector4f color)
-    {
-        this.Color = color;
-        this.Sprite = new Sprite(null);
-        this.IsDirty = true;
-    }
-    public SpriteRender(Sprite sprite)
-    {
-        this.Sprite = sprite;
-        this.Color = new Vector4f(1, 1, 1, 1);
-        this.IsDirty = true;
-    }
+    public SpriteRender() { }
 
     @Override
     public void update(float dt)
@@ -38,6 +27,20 @@ public class SpriteRender extends Component {
     public void Init()
     {
         LastTransform = getGameObject().Transform.copy();
+    }
+
+    public void InitSprite(Sprite sprite)
+    {
+        this.Sprite = sprite;
+        this.Color = new Vector4f(1, 1, 1, 1);
+        this.IsDirty = true;
+    }
+
+    public void InitSprite(Vector4f color)
+    {
+        this.Color = color;
+        this.Sprite = new Sprite();
+        this.IsDirty = true;
     }
 
     public Vector4f getColor()

@@ -22,6 +22,7 @@ public class SceneManager
                 .findAny()
                 .orElseThrow( RuntimeException::new );
         CurrentScene = Scenes.indexOf(newscene);
+        getCurrentScene().load();
         getCurrentScene().Init();
     }
     public void loadScene(String name)
@@ -30,6 +31,7 @@ public class SceneManager
                 .findAny()
                 .orElseThrow( RuntimeException::new );
         CurrentScene = Scenes.indexOf(newscene);
+        getCurrentScene().load();
         getCurrentScene().Init();
     }
 
@@ -54,14 +56,5 @@ public class SceneManager
     public void updateScene(float dt)
     {
         Scenes.get(CurrentScene).update(dt);
-    }
-
-    public void setCurrentScene(int sceneid)
-    {
-        Scene sceneget = Scenes.stream().filter(scene -> sceneid == scene.getId())
-            .findAny()
-            .orElseThrow( RuntimeException::new );
-
-        CurrentScene = Scenes.indexOf(sceneget);
     }
 }

@@ -8,8 +8,8 @@ import java.util.List;
 
 public class GameObject
 {
-    public Transform Transform;
     private String Name;
+    public Transform Transform;
     private List<Component> Components;
 
     public GameObject(String name)

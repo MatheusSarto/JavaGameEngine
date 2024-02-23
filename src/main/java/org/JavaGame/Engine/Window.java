@@ -19,7 +19,7 @@ public class Window
     private SceneManager SceneManager;
     private static int Width;
     private static int Height;
-    private String Title;
+    private final String Title;
     private long GlfwWindow;
     private ImGuiLayer ImGuiLayer;
 
@@ -28,7 +28,7 @@ public class Window
     {
         Width = 1920;
         Height = 1080;
-        this.Title = "Testing";
+        this.Title = "JAVA GAME ENGINE";
         init();
 
         SceneManager = new SceneManager();
@@ -56,22 +56,22 @@ public class Window
             glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
             SceneManager.updateScene(dt);
 
-            this.ImGuiLayer.update(dt, SceneManager.getCurrentScene());
+            this.ImGuiLayer.update(dt, org.JavaGame.Engine.Util.SceneManager.getCurrentScene());
 
             glfwSwapBuffers(GlfwWindow);
 
             if(KeyListener.isKeyPressed(KeyEvent.VK_1))
             {
-                SceneManager.setCurrentScene(1);
-                SceneManager.getCurrentScene().Init();
+                SceneManager.loadScene(1);
             }
             if(KeyListener.isKeyPressed(KeyEvent.VK_0))
             {
-                SceneManager.setCurrentScene(0);
-                SceneManager.getCurrentScene().Init();
+                SceneManager.loadScene(0);
             }
 
         }
+
+        org.JavaGame.Engine.Util.SceneManager.getCurrentScene().saveExit();
 
         // Free the Memory
         glfwFreeCallbacks(GlfwWindow);
