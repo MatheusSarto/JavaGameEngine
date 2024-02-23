@@ -10,3 +10,4 @@ Aplicar e demonstrar conhecimentos fundamentais da línguagem de programação J
   - ♨️ JAVA 17
   - 🖥️ OpenGL
   - 🫠 ImGUI
+  - 🥣 Gson
