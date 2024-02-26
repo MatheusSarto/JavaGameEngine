@@ -5,14 +5,12 @@ import com.google.gson.GsonBuilder;
 import imgui.ImGui;
 import org.JavaGame.Engine.Camera;
 import org.JavaGame.Engine.Components.Component;
-import org.JavaGame.Engine.Components.SpriteSheet;
 import org.JavaGame.Engine.GameObject;
 import org.JavaGame.Engine.Renderer.Renderer;
 import org.JavaGame.Engine.Runnable;
 import org.JavaGame.Engine.Serialize.ComponentDeserializer;
 import org.JavaGame.Engine.Serialize.ComponentSerializer;
 import org.JavaGame.Engine.Serialize.GameObjectDeserializer;
-import org.JavaGame.Engine.Util.AssetPool;
 import org.joml.Vector2f;
 
 import java.io.FileWriter;
@@ -30,13 +28,14 @@ public abstract class Scene implements Runnable
     private boolean IsRunning = false;
     private final String Name;
     private final int Id;
-    protected GameObject ActiveGameobject = null;
+    protected GameObject ActiveGameobject;
     protected boolean LevelLoaded = false;
 
     public Scene(String name, int  id)
     {
         this.Name = name;
         this.Id = id;
+        ActiveGameobject = null;
     }
 
     @Override
@@ -86,15 +85,9 @@ public abstract class Scene implements Runnable
     public String getName() { return this.Name; }
     public int getId() { return this.Id; }
 
-    private void loadResources()
+    protected void loadResources()
     {
-        AssetPool.getShader("assets/shaders/default.glsl");
 
-        SpriteSheet spriteSheet = new SpriteSheet();
-        spriteSheet.InitSpriteSheet(AssetPool.getTexture("assets/images/spritesheet.png"),
-                16, 16, 26, 0);
-
-        AssetPool.addSpriteSheet("assets/images/spritesheet.png",spriteSheet);
     }
 
     public void sceneImgui()
@@ -108,6 +101,7 @@ public abstract class Scene implements Runnable
 
         imGui();
     }
+
     public void imGui() { }
 
     public void saveExit()
@@ -150,14 +144,40 @@ public abstract class Scene implements Runnable
             e.printStackTrace();
         }
 
-        if(!inFile.equals(""))
+        if(!inFile.isEmpty())
         {
+            int maxGoId = -1;
+            int maxCompId = -1;
             GameObject[] objs = gson.fromJson(inFile, GameObject[].class);
             for(int i = 0; i < objs.length; i++)
             {
                 addGameObjectToScene(objs[i]);
+
+                for(Component c : objs[i].getAllComponents())
+                {
+                    if(c.getUID() > maxCompId)
+                    {
+                        maxCompId = c.getUID();
+                    }
+                }
+                if(objs[i].getUID() > maxGoId)
+                {
+                    maxGoId = objs[i].getUID();
+                }
             }
-            this.LevelLoaded = true;
+            maxGoId++;
+            maxCompId++;
+            GameObject.staticIinit(maxGoId);
+            Component.staticInit(maxCompId);
+            LevelLoaded = true;
         }
+    }
+    public void setLevelLoaded(boolean levelLoaded)
+    {
+        this.LevelLoaded = levelLoaded;
+    }
+    public boolean getLevelLoaded()
+    {
+        return this.LevelLoaded;
     }
 }

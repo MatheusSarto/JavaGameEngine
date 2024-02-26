@@ -5,7 +5,6 @@ import org.JavaGame.Engine.Util.AssetPool;
 import org.JavaGame.Engine.Util.SceneManager;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -196,7 +195,7 @@ public class RenderBatch implements Comparable<RenderBatch>
         {
             for(int i = 0; i < Textures.size(); i++)
             {
-                if(Textures.get(i) == sprite.getTexture())
+                if(Textures.get(i).equals(sprite.getTexture()))
                 {
                     textureId = i + 1;
                     break;

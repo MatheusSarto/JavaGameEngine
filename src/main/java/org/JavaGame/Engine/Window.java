@@ -3,6 +3,8 @@ package org.JavaGame.Engine;
 import org.JavaGame.Engine.ImGui.ImGuiLayer;
 import org.JavaGame.Engine.Listeners.KeyListener;
 import org.JavaGame.Engine.Listeners.MouseListener;
+import org.JavaGame.Engine.Renderer.DebugDraw;
+import org.JavaGame.Engine.Renderer.FrameBuffer;
 import org.JavaGame.Engine.Scenes.LevelEditorScene;
 import org.JavaGame.Engine.Scenes.LevelScene;
 import org.JavaGame.Engine.Util.SceneManager;
@@ -22,6 +24,7 @@ public class Window
     private final String Title;
     private long GlfwWindow;
     private ImGuiLayer ImGuiLayer;
+    private FrameBuffer FrameBuffer;
 
 
     public Window()
@@ -52,9 +55,19 @@ public class Window
             float dt = endTime - beginTime;
             beginTime = endTime;
 
-            glClear(GL_COLOR_BUFFER_BIT);
+            DebugDraw.beginFrame();
+
             glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-            SceneManager.updateScene(dt);
+            glClear(GL_COLOR_BUFFER_BIT);
+
+
+            //this.FrameBuffer.bind();
+            if(dt >= 0)
+            {
+                SceneManager.updateScene(dt);
+            }
+            //this.FrameBuffer.unbind();
+
 
             this.ImGuiLayer.update(dt, org.JavaGame.Engine.Util.SceneManager.getCurrentScene());
 
@@ -139,7 +152,7 @@ public class Window
         this.ImGuiLayer = new ImGuiLayer(GlfwWindow);
         this.ImGuiLayer.InitImGui();
 
-
+        this.FrameBuffer = new FrameBuffer(1920, 1080);
     }
 
     public static void setHeight(int newHeight)

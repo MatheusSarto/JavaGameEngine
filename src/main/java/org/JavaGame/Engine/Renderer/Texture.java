@@ -11,13 +11,26 @@ import static org.lwjgl.stb.STBImage.*;
 public class Texture
 {
     private String FilePath;
-    private int TextureID;
+    private transient int TextureID;
     private int Width;
     private int Height;
 
     public Texture()
     {
+        TextureID = -1;
+        Width = -1;
+        Height = -1;
+    }
+    public Texture(int width, int height)
+    {
+        this.FilePath = "Generated";
 
+        this.Width = width;
+        this.Height = height;
+        TextureID = glGenTextures();
+        glBindTexture(GL_TEXTURE_2D, TextureID);
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
     }
 
     public void InitTexture(String filepath)
@@ -88,5 +101,22 @@ public class Texture
     public  int getHeight()
     {
         return this.Height;
+    }
+    public String getFilePath()
+    {
+        return this.FilePath;
+    }
+    public int getTextureID()
+    {
+        return this.TextureID;
+    }
+    @Override
+    public boolean equals(Object o)
+    {
+        if(o == null) return false;
+        if(!(o instanceof  Texture)) return false;
+        Texture oTex = (Texture)o;
+        return oTex.getWidth() == this.getWidth() && oTex.Height == this.getHeight() && oTex.getTextureID() == this.TextureID
+                && oTex.getFilePath().equals(this.FilePath);
     }
 }

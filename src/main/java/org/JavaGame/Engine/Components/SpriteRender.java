@@ -6,7 +6,7 @@ import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 public class SpriteRender extends Component {
-    private Vector4f Color;
+    private Vector4f Color = new Vector4f(1, 1, 1, 1);
     private Sprite Sprite;
     private transient Transform LastTransform;
     private transient boolean IsDirty = true;
@@ -55,7 +55,7 @@ public class SpriteRender extends Component {
 
     public Vector2f[] getTextCoords()
     {
-        return Sprite.getTextCoords();
+        return Sprite.getTexCoords();
     }
     public void setSprite(Sprite sprite)
     {
@@ -90,5 +90,10 @@ public class SpriteRender extends Component {
             this.Color.set(imColors[0], imColors[1], imColors[2], imColors[3]);
             this.IsDirty = true;
         }
+    }
+
+    public void setTexture(Texture texture)
+    {
+        this.Sprite.setTexture(texture);
     }
 }

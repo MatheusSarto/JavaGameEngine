@@ -11,12 +11,13 @@ import java.lang.reflect.Modifier;
 
 public abstract class Component implements Runnable
 {
+    private static int ID_COUNTER = 0;
+    private int UID = -1;
     private transient GameObject GameObject = null;
 
     public GameObject getGameObject() {
         return GameObject;
     }
-
     public void setGameObject(GameObject gameobject)
     {
         this.GameObject = gameobject;
@@ -102,5 +103,20 @@ public abstract class Component implements Runnable
         {
             e.printStackTrace();;
         }
+    }
+    public void generateId()
+    {
+        if(this.UID == -1)
+        {
+            this.UID = ID_COUNTER++;
+        }
+    }
+    public int getUID()
+    {
+        return this.UID;
+    }
+    public static void staticInit(int maxId)
+    {
+        ID_COUNTER = maxId;
     }
 }

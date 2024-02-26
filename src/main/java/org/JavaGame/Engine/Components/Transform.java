@@ -9,19 +9,17 @@ public class Transform
     private Vector2f Scale;
 
     public Transform()
-    { }
-    public void InitTransform()
     {
         this.Position   = new Vector3f();
         this.Scale      = new Vector2f();
     }
 
-    public void InitTransform(Vector3f position, Vector2f scale)
+    public Transform(Vector3f position, Vector2f scale)
     {
         this.Position   = position;
         this.Scale      = scale;
     }
-    public void InitTransform(Vector3f position)
+    public Transform(Vector3f position)
     {
         this.Position   = position;
         this.Scale      = new Vector2f();
@@ -55,11 +53,7 @@ public class Transform
 
     public Transform copy()
     {
-        Transform copy = new Transform();
-        copy.InitTransform(new Vector3f(this.Position), new Vector2f(this.Scale));
-
-        return copy;
-
+        return new Transform(new Vector3f(this.Position), new Vector2f(this.Scale));
     }
 
     public void copy(Transform to)

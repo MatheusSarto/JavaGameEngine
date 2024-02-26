@@ -2,13 +2,12 @@ package org.JavaGame.Engine.Components;
 
 import org.JavaGame.Engine.Renderer.Texture;
 import org.joml.Vector2f;
-import org.joml.Vector4f;
 
 public class Sprite
 {
-    private Vector4f Color;
     private Vector2f[] TextCoords;
     private Texture Texture;
+    private float Width, Height;
 
     public Sprite()
     {
@@ -32,7 +31,7 @@ public class Sprite
         };
     }
 
-    public Sprite(Texture texture, Vector2f[] textCoords)
+    public void InitSprite(Texture texture, Vector2f[] textCoords)
     {
         this.Texture = texture;
         this.TextCoords = textCoords;
@@ -43,8 +42,32 @@ public class Sprite
         return  this.Texture;
     }
 
-    public Vector2f[] getTextCoords()
+    public Vector2f[] getTexCoords()
     {
         return this.TextCoords;
+    }
+
+    public float getWidth() {
+        return this.Width;
+    }
+
+    public void setWidth(float width) {
+        Width = width;
+    }
+
+    public float getHeight() {
+        return this.Height;
+    }
+
+    public void setHeight(float height) {
+        Height = height;
+    }
+    public int getTexId()
+    {
+        return Texture == null ? -1 : Texture.getTextureID();
+    }
+    public void setTexture(Texture texture)
+    {
+        this.Texture =  texture;
     }
 }

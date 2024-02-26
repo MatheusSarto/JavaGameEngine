@@ -39,7 +39,10 @@ public class SpriteSheet
                             new Vector2f(leftX,topY)
                     };
 
-            Sprite sprite = new Sprite(Texture, texCoords);
+            Sprite sprite = new Sprite();
+            sprite.InitSprite(Texture, texCoords);
+            sprite.setWidth(spriteWidth);
+            sprite.setHeight(spriteHeight);
             this.Sprites.add(sprite);
 
             currentX += spriteWidth + spacing;
@@ -54,5 +57,10 @@ public class SpriteSheet
     public Sprite getSprite(int index)
     {
         return this.Sprites.get(index);
+    }
+
+    public int size()
+    {
+        return Sprites.size();
     }
 }
