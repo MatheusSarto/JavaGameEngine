@@ -10,6 +10,7 @@ public class Prefabs
 {
     public static GameObject generateSpriteObject(Sprite sprite, float sizeX, float sizeY)
     {
+        System.out.println("GERANDO OBJETO AO CLICAR");
         GameObject block = new GameObject("sprite_obj_gen", new Transform(new Vector3f(), new Vector2f(sizeX, sizeY)));
 
         SpriteRender render = new SpriteRender();

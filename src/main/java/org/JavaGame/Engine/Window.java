@@ -24,7 +24,7 @@ public class Window
     private final String Title;
     private long GlfwWindow;
     private ImGuiLayer ImGuiLayer;
-    private FrameBuffer FrameBuffer;
+    private static FrameBuffer FrameBuffer;
 
 
     public Window()
@@ -57,16 +57,15 @@ public class Window
 
             DebugDraw.beginFrame();
 
-            glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+            this.FrameBuffer.bind();
+            glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT);
 
-
-            //this.FrameBuffer.bind();
             if(dt >= 0)
             {
                 SceneManager.updateScene(dt);
             }
-            //this.FrameBuffer.unbind();
+            this.FrameBuffer.unbind();
 
 
             this.ImGuiLayer.update(dt, org.JavaGame.Engine.Util.SceneManager.getCurrentScene());
@@ -153,6 +152,7 @@ public class Window
         this.ImGuiLayer.InitImGui();
 
         this.FrameBuffer = new FrameBuffer(1920, 1080);
+        glViewport(0, 0,1920, 1080);
     }
 
     public static void setHeight(int newHeight)
@@ -168,9 +168,15 @@ public class Window
     {
         Width = newWidth;
     }
+    public static FrameBuffer getFramebuffer()
+    {
+        return FrameBuffer;
+    }
 
-
-
+    public static float getTargetAspectRatio()
+    {
+        return 16.0f / 9.0f;
+    }
     public static int getHeight()
     {
         return Height;

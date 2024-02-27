@@ -68,7 +68,6 @@ public class DebugDraw
         int index = 0;
         for(Line2D line : Lines)
         {
-            System.out.println("DRAWING LINE");
             for(int i = 0; i < 2; i++)
             {
                 Vector2f position = i == 0 ? line.getFrom() : line.getTo();

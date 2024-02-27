@@ -6,6 +6,7 @@ import imgui.callback.ImStrSupplier;
 import imgui.flag.*;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.type.ImBoolean;
+import org.JavaGame.Editor.GameViewWindow;
 import org.JavaGame.Engine.Listeners.KeyListener;
 import org.JavaGame.Engine.Listeners.MouseListener;
 import org.JavaGame.Engine.Scenes.Scene;
@@ -37,6 +38,7 @@ public class ImGuiLayer
         setupDockspace();
         currentScene.sceneImgui();
         ImGui.showDemoWindow();
+        GameViewWindow.imgui();
         ImGui.end();
         ImGui.render();
 
@@ -141,7 +143,7 @@ public class ImGuiLayer
             }
 
             // Forwarding event call to our GLFW function callback
-            if(!io.getWantCaptureMouse())
+            if(!io.getWantCaptureMouse() || GameViewWindow.getWantCaptureMouse())
             {
                 MouseListener.mouserButtonCallback(w, button, action, mods);
             }
