@@ -118,4 +118,8 @@ public class GameObject
     {
         return this.Components;
     }
+
+    public String getName() {
+        return Name;
+    }
 }

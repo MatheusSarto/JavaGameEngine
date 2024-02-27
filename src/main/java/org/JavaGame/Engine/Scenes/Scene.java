@@ -2,7 +2,6 @@ package org.JavaGame.Engine.Scenes;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import imgui.ImGui;
 import org.JavaGame.Engine.Camera;
 import org.JavaGame.Engine.Components.Component;
 import org.JavaGame.Engine.GameObject;
@@ -28,14 +27,13 @@ public abstract class Scene implements Runnable
     private boolean IsRunning = false;
     private final String Name;
     private final int Id;
-    protected GameObject ActiveGameobject;
+
     protected boolean LevelLoaded = false;
 
     public Scene(String name, int  id)
     {
         this.Name = name;
         this.Id = id;
-        ActiveGameobject = null;
     }
 
     @Override
@@ -62,8 +60,9 @@ public abstract class Scene implements Runnable
         {
             gameobject.update(dt);
         }
-        this.Renderer.render();
+
     }
+    public abstract void render();
     public void addGameObjectToScene(GameObject gameObject)
     {
         if(!IsRunning)
@@ -92,13 +91,6 @@ public abstract class Scene implements Runnable
 
     public void sceneImgui()
     {
-        if(ActiveGameobject != null)
-        {
-            ImGui.begin("Inspector");
-            ActiveGameobject.imgui();
-            ImGui.end();
-        }
-
         imGui();
     }
 
@@ -179,5 +171,10 @@ public abstract class Scene implements Runnable
     public boolean getLevelLoaded()
     {
         return this.LevelLoaded;
+    }
+
+    public List<GameObject> getGameObjects()
+    {
+        return this.GameObjects;
     }
 }

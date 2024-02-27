@@ -151,4 +151,20 @@ public class MouseListener
 
         return currentY;
     }
+
+    public static float getScreenX()
+    {
+        float currentX = getX() - get().GameViewportPos.x;
+        currentX = (currentX / get().GameViewportSize.x) * 1920.0f;
+
+        return currentX;
+    }
+
+    public static float getScreenY()
+    {
+        float currentY = getY() - get().GameViewportPos.y;
+        currentY =  1080.0f - ((currentY / get().GameViewportSize.y) * 1080.0f);
+
+        return currentY;
+    }
 }

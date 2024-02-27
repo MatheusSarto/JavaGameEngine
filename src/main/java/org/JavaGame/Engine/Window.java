@@ -3,10 +3,10 @@ package org.JavaGame.Engine;
 import org.JavaGame.Engine.ImGui.ImGuiLayer;
 import org.JavaGame.Engine.Listeners.KeyListener;
 import org.JavaGame.Engine.Listeners.MouseListener;
-import org.JavaGame.Engine.Renderer.DebugDraw;
-import org.JavaGame.Engine.Renderer.FrameBuffer;
+import org.JavaGame.Engine.Renderer.*;
 import org.JavaGame.Engine.Scenes.LevelEditorScene;
 import org.JavaGame.Engine.Scenes.LevelScene;
+import org.JavaGame.Engine.Util.AssetPool;
 import org.JavaGame.Engine.Util.SceneManager;
 import org.lwjgl.opengl.GL;
 
@@ -26,6 +26,12 @@ public class Window
     private ImGuiLayer ImGuiLayer;
     private static FrameBuffer FrameBuffer;
 
+    public static org.JavaGame.Engine.Renderer.PickingTexture getPickingTexture() {
+        return PickingTexture;
+    }
+
+    private static PickingTexture PickingTexture;
+
 
     public Window()
     {
@@ -33,11 +39,6 @@ public class Window
         Height = 1080;
         this.Title = "JAVA GAME ENGINE";
         init();
-
-        SceneManager = new SceneManager();
-        SceneManager.addScene(new LevelEditorScene("LEVEL EDITOR SCENE", 0));
-        SceneManager.addScene(new LevelScene("LEVEL SCENE", 1));
-        SceneManager.loadScene(0);
     }
 
     public void run()
@@ -46,10 +47,32 @@ public class Window
         float beginTime = (float)glfwGetTime();
         float endTime = (float)glfwGetTime();
 
+        Shader defaultShader = AssetPool.getShader("assets/shaders/default.glsl");
+        Shader pickingShader = AssetPool.getShader("assets/shaders/pickingShader.glsl");
+
         while(!glfwWindowShouldClose(GlfwWindow))
         {
             // Pool Events
             glfwPollEvents();
+
+            // Render pass 1. Render to picking texture
+            glDisable(GL_BLEND);
+            PickingTexture.enableWriting();
+
+            glViewport(0, 0,Width,Height);
+            glClearColor(0.0f,0.0f,0.0f,0.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            Renderer.bindShader(pickingShader);
+            SceneManager.renderScene();
+
+
+
+
+            PickingTexture.disableWriting();
+            glEnable(GL_BLEND);
+
+            // Render pass 2. Render actual game
 
             endTime = (float)glfwGetTime();
             float dt = endTime - beginTime;
@@ -63,7 +86,9 @@ public class Window
 
             if(dt >= 0)
             {
+                Renderer.bindShader(defaultShader);
                 SceneManager.updateScene(dt);
+                SceneManager.renderScene();
             }
             this.FrameBuffer.unbind();
 
@@ -151,8 +176,14 @@ public class Window
         this.ImGuiLayer = new ImGuiLayer(GlfwWindow);
         this.ImGuiLayer.InitImGui();
 
-        this.FrameBuffer = new FrameBuffer(1920, 1080);
-        glViewport(0, 0,1920, 1080);
+        this.FrameBuffer = new FrameBuffer(Width, Height);
+        this.PickingTexture = new PickingTexture(Width, Height);
+        glViewport(0, 0,Width, Height);
+
+        SceneManager = new SceneManager();
+        SceneManager.addScene(new LevelEditorScene("LEVEL EDITOR SCENE", 0));
+        SceneManager.addScene(new LevelScene("LEVEL SCENE", 1));
+        SceneManager.loadScene(0);
     }
 
     public static void setHeight(int newHeight)

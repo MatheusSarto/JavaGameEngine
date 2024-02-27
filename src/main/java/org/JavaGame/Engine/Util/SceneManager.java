@@ -57,4 +57,5 @@ public class SceneManager
     {
         Scenes.get(CurrentScene).update(dt);
     }
+    public void renderScene() { Scenes.get(CurrentScene).render(); }
 }

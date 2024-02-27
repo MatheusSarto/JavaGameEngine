@@ -11,6 +11,7 @@ public class Renderer
 {
     private List<RenderBatch> RenderBatches;
     private final int MAX_BATCH_SIZE = 1000;
+    private static Shader CurrentShder;
 
     public Renderer()
     {
@@ -18,6 +19,7 @@ public class Renderer
     }
     public void render()
     {
+        CurrentShder.bind();
         for(RenderBatch batch : RenderBatches)
         {
             batch.render();
@@ -57,5 +59,15 @@ public class Renderer
           newBatch.addSprite(sprite);
           Collections.sort(RenderBatches);
         }
+    }
+
+    public static void bindShader(Shader shader)
+    {
+        CurrentShder = shader;
+    }
+
+    public static Shader getBoundShader()
+    {
+        return CurrentShder;
     }
 }
