@@ -10,7 +10,7 @@ public class LevelScene extends Scene
     @Override
     public void update(float dt)
     {
-        System.out.println("LEVEL SCENE UPDATE");
+
     }
 
     @Override

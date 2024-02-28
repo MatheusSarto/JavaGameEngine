@@ -10,8 +10,6 @@ import org.JavaGame.Engine.Util.AssetPool;
 import org.JavaGame.Engine.Util.SceneManager;
 import org.lwjgl.opengl.GL;
 
-import java.awt.event.KeyEvent;
-
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
@@ -43,8 +41,8 @@ public class Window
 
     public void run()
     {
-        System.out.println("RENDER THREAD");
         float beginTime = (float)glfwGetTime();
+        float dt = 0;
         float endTime = (float)glfwGetTime();
 
         Shader defaultShader = AssetPool.getShader("assets/shaders/default.glsl");
@@ -55,7 +53,6 @@ public class Window
             // Pool Events
             glfwPollEvents();
 
-            // Render pass 1. Render to picking texture
             glDisable(GL_BLEND);
             PickingTexture.enableWriting();
 
@@ -66,17 +63,8 @@ public class Window
             Renderer.bindShader(pickingShader);
             SceneManager.renderScene();
 
-
-
-
             PickingTexture.disableWriting();
             glEnable(GL_BLEND);
-
-            // Render pass 2. Render actual game
-
-            endTime = (float)glfwGetTime();
-            float dt = endTime - beginTime;
-            beginTime = endTime;
 
             DebugDraw.beginFrame();
 
@@ -93,22 +81,17 @@ public class Window
             this.FrameBuffer.unbind();
 
 
-            this.ImGuiLayer.update(dt, org.JavaGame.Engine.Util.SceneManager.getCurrentScene());
+            this.ImGuiLayer.update(dt, SceneManager.getCurrentScene());
 
             glfwSwapBuffers(GlfwWindow);
+            MouseListener.endFrame();
 
-            if(KeyListener.isKeyPressed(KeyEvent.VK_1))
-            {
-                SceneManager.loadScene(1);
-            }
-            if(KeyListener.isKeyPressed(KeyEvent.VK_0))
-            {
-                SceneManager.loadScene(0);
-            }
-
+            endTime = (float)glfwGetTime();
+            dt = endTime - beginTime;
+            beginTime = endTime;
         }
 
-        org.JavaGame.Engine.Util.SceneManager.getCurrentScene().saveExit();
+        SceneManager.getCurrentScene().saveExit();
 
         // Free the Memory
         glfwFreeCallbacks(GlfwWindow);
@@ -173,12 +156,13 @@ public class Window
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
-        this.ImGuiLayer = new ImGuiLayer(GlfwWindow);
-        this.ImGuiLayer.InitImGui();
 
         this.FrameBuffer = new FrameBuffer(Width, Height);
         this.PickingTexture = new PickingTexture(Width, Height);
         glViewport(0, 0,Width, Height);
+
+        this.ImGuiLayer = new ImGuiLayer(GlfwWindow, PickingTexture);
+        this.ImGuiLayer.InitImGui();
 
         SceneManager = new SceneManager();
         SceneManager.addScene(new LevelEditorScene("LEVEL EDITOR SCENE", 0));

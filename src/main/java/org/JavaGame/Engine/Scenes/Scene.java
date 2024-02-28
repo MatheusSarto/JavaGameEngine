@@ -89,12 +89,7 @@ public abstract class Scene implements Runnable
 
     }
 
-    public void sceneImgui()
-    {
-        imGui();
-    }
-
-    public void imGui() { }
+    public void imgui() { }
 
     public void saveExit()
     {
@@ -176,5 +171,9 @@ public abstract class Scene implements Runnable
     public List<GameObject> getGameObjects()
     {
         return this.GameObjects;
+    }
+    public GameObject getGameObject(int uid)
+    {
+        return this.GameObjects.stream().filter(go -> go.getUID() == uid).findFirst().orElse(null);
     }
 }

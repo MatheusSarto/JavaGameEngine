@@ -1,5 +1,6 @@
 package org.JavaGame.Engine;
 
+import imgui.ImGui;
 import org.JavaGame.Engine.Components.Component;
 import org.JavaGame.Engine.Components.Transform;
 
@@ -34,8 +35,6 @@ public class GameObject
 
     public void update(float dt)
     {
-        //System.out.println("UPDATE: PRINTING FROM " + Name);
-
         for(int i = 0; i < Components.size(); i++)
         {
             Components.get(i).update(dt);
@@ -44,7 +43,6 @@ public class GameObject
 
     public void Init()
     {
-        //System.out.println("INIT: PRINTING FROM " + Name);
         for(int i = 0; i < Components.size(); i++)
         {
             Components.get(i).Init();
@@ -99,10 +97,16 @@ public class GameObject
 
     public void imgui()
     {
+
+        ImGui.text("Game Object name: " + this.Name);
+        ImGui.newLine();
         for (Component c : Components)
         {
+            ImGui.text("Component Name:"  + c.getName());
             c.imgui();
         }
+
+
     }
 
     public static void staticIinit(int maxId)

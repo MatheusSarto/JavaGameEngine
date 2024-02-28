@@ -11,7 +11,10 @@ public class SpriteRender extends Component {
     private transient Transform LastTransform;
     private transient boolean IsDirty = true;
 
-    public SpriteRender() { }
+    public SpriteRender()
+    {
+        this.Name = "SpriteRenderer";
+    }
 
     @Override
     public void update(float dt)
@@ -84,12 +87,14 @@ public class SpriteRender extends Component {
     @Override
     public void imgui()
     {
+        ImGui.beginChild(this.Name);
         float[] imColors = {Color.x, Color.y, Color.z, Color.w};
         if(ImGui.colorPicker4("Color picker", imColors))
         {
             this.Color.set(imColors[0], imColors[1], imColors[2], imColors[3]);
             this.IsDirty = true;
         }
+        ImGui.endChild();
     }
 
     public void setTexture(Texture texture)

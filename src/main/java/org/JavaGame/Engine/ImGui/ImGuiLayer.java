@@ -7,9 +7,12 @@ import imgui.flag.*;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.type.ImBoolean;
 import org.JavaGame.Editor.GameViewWindow;
+import org.JavaGame.Editor.PropertiesWindow;
 import org.JavaGame.Engine.Listeners.KeyListener;
 import org.JavaGame.Engine.Listeners.MouseListener;
+import org.JavaGame.Engine.Renderer.PickingTexture;
 import org.JavaGame.Engine.Scenes.Scene;
+import org.JavaGame.Engine.Util.SceneManager;
 import org.JavaGame.Engine.Window;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -21,13 +24,17 @@ public class ImGuiLayer
     private final long[] mouseCursors = new long[ImGuiMouseCursor.COUNT];
 
     // LWJGL3 renderer (SHOULD be initialized)
-    private final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
+    private final ImGuiImplGl3 imGuiGl3;
+    private GameViewWindow GameViewWindow;
+    private PropertiesWindow PropertiesWindow;
 
-    public ImGuiLayer(long windowPtr)
+    public ImGuiLayer(long windowPtr, PickingTexture pickingTexture)
     {
-        this.WindowPtr = windowPtr;
+        this.WindowPtr          = windowPtr;
+        this.GameViewWindow     = new GameViewWindow();
+        this.PropertiesWindow   = new PropertiesWindow(pickingTexture);
+        this.imGuiGl3           = new ImGuiImplGl3();
     }
-
 
     public void update(float dt, Scene currentScene)
     {
@@ -36,9 +43,11 @@ public class ImGuiLayer
         // Any Dear ImGui code SHOULD go between ImGui.newFrame()/ImGui.render() methods
         ImGui.newFrame();
         setupDockspace();
-        currentScene.sceneImgui();
+        currentScene.imgui();
         ImGui.showDemoWindow();
         GameViewWindow.imgui();
+        PropertiesWindow.update(dt, SceneManager.getCurrentScene());
+        PropertiesWindow.imgui();
         ImGui.end();
         ImGui.render();
 
@@ -152,6 +161,7 @@ public class ImGuiLayer
         glfwSetScrollCallback(WindowPtr, (w, xOffset, yOffset) -> {
             io.setMouseWheelH(io.getMouseWheelH() + (float) xOffset);
             io.setMouseWheel(io.getMouseWheel() + (float) yOffset);
+            MouseListener.mouseScrollCallback(w, xOffset, yOffset);
         });
 
         io.setSetClipboardTextFn(new ImStrConsumer() {

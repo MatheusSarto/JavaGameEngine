@@ -4,60 +4,31 @@ import imgui.ImGui;
 import imgui.ImVec2;
 import org.JavaGame.Engine.Components.*;
 import org.JavaGame.Engine.GameObject;
-import org.JavaGame.Engine.Listeners.MouseListener;
 import org.JavaGame.Engine.Prefabs;
 import org.JavaGame.Engine.Renderer.DebugDraw;
 import org.JavaGame.Engine.Util.AssetPool;
-import org.JavaGame.Engine.Util.SceneManager;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import java.util.List;
 
-import static org.JavaGame.Engine.Window.getPickingTexture;
-import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
-
 public class LevelEditorScene extends Scene
 {
     private SpriteSheet Sprites;
     private GameObject LevelEditorObjects = new GameObject("LevelEditor", new Transform());
-    protected GameObject ActiveGameobject;
-
     public LevelEditorScene(String name, int id)
     {
         super(name, id);
-        ActiveGameobject = null;
 
     }
     @Override
     public void update(float dt)
     {
         super.update(dt);
-
         LevelEditorObjects.update(dt);
-
-        if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT))
-        {
-            int x  = (int)MouseListener.getScreenX();
-            int y  = (int)MouseListener.getScreenY();
-
-            System.out.println(getPickingTexture().readPixel(x,y));
-
-            if(SceneManager.getCurrentScene().getLevelLoaded() && !SceneManager.getCurrentScene().getGameObjects().isEmpty() &&
-                    GameObjects.stream().anyMatch(go -> go.getUID() == getPickingTexture().readPixel(x, y)) )
-            {
-                GameObject filter = SceneManager.getCurrentScene().getGameObjects().stream().filter(go -> go.getUID() == getPickingTexture().readPixel(x,y)).toList().get(0);
-
-                setActiveGameObject(
-                        SceneManager.getCurrentScene().getGameObjects().get(
-                                SceneManager.getCurrentScene().getGameObjects().indexOf(filter)
-                        )
-                    );
-            }
-        }
+        this.Camera.adjustProjection();
 
         DebugDraw.draw();
-
     }
 
     @Override
@@ -69,14 +40,15 @@ public class LevelEditorScene extends Scene
     @Override
     public void Init()
     {
+        super.Init();
+
         LevelEditorObjects.addComponent(new MouseControls());
         LevelEditorObjects.addComponent(new GridLines());
+        LevelEditorObjects.addComponent(new EditorCamera(this.Camera));
 
         DebugDraw.addLine2D(new Vector2f(0f, 0f), new Vector2f(800.0f, 800.0f), new Vector3f(2,0,0), 2000);
         DebugDraw.addLine2D(new Vector2f(0f, 0f), new Vector2f(800.0f, 800.0f), new Vector3f(2,0,0), 2);
 
-
-        super.Init();
         Sprites = AssetPool.getSpriteSheet("assets/images/decorationsAndBlocks.png");
     }
 
@@ -104,7 +76,7 @@ public class LevelEditorScene extends Scene
     }
 
     @Override
-    public void imGui()
+    public void imgui()
     {
         ImGui.begin("Assets");
         ImVec2 windowPos = new ImVec2();
@@ -127,6 +99,7 @@ public class LevelEditorScene extends Scene
             if(ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[2].x, texCoords[0].y, texCoords[0].x, texCoords[2].y))
             {
                 GameObject object = Prefabs.generateSpriteObject(sprite, 32, 32);
+                object.addComponent(new Rigidbody());
                 // Attach this to mouse cursor
                 LevelEditorObjects.getComponent(MouseControls.class).pickUpObject(object);
             }
@@ -142,22 +115,5 @@ public class LevelEditorScene extends Scene
             }
         }
         ImGui.end();
-    }
-
-    @Override
-    public void sceneImgui()
-    {
-        super.sceneImgui();
-
-        if(ActiveGameobject != null)
-        {
-            ImGui.begin("Inspector");
-            ActiveGameobject.imgui();
-            ImGui.end();
-        }
-    }
-    public void setActiveGameObject(GameObject gameObject)
-    {
-        this.ActiveGameobject = gameObject;
     }
 }

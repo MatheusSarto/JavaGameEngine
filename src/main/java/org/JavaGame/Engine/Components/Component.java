@@ -11,9 +11,11 @@ import java.lang.reflect.Modifier;
 
 public abstract class Component implements Runnable
 {
+    protected String Name = "Unkown";
     private static int ID_COUNTER = 0;
     private int UID = -1;
     private transient GameObject GameObject = null;
+
 
     public GameObject getGameObject() {
         return GameObject;
@@ -119,4 +121,13 @@ public abstract class Component implements Runnable
     {
         ID_COUNTER = maxId;
     }
+
+    public String getName() {
+        return Name;
+    }
+
+    public void setName(String name) {
+        Name = name;
+    }
+
 }

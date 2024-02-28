@@ -243,7 +243,6 @@ public class RenderBatch implements Comparable<RenderBatch>
 
             // Load Entity ID
             Vertices[offset + 9] = sprite.getGameObject().getUID() + 1;
-            System.out.println(sprite.getGameObject().getName() + " " + sprite.getGameObject().getUID() + 1);
 
             offset += VERTEX_SIZE;
         }

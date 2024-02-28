@@ -11,6 +11,12 @@ public class MouseControls extends Component
 {
     GameObject HoldingObject = null;
 
+    public MouseControls()
+    {
+        this.Name = "Mouse Controls";
+    }
+
+
     public void pickUpObject(GameObject  go)
     {
         this.HoldingObject = go;

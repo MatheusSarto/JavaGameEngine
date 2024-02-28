@@ -7,6 +7,10 @@ import org.joml.Vector2f;
 
 public class GridLines extends Component
 {
+    public GridLines()
+    {
+        this.Name = "Grid Lines";
+    }
     @Override
     public void update(float dt)
     {
@@ -41,4 +45,5 @@ public class GridLines extends Component
         }
 
     }
+
 }

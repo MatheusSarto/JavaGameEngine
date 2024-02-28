@@ -3,7 +3,7 @@ package org.JavaGame.Engine.Components;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-public class Transform
+public class Transform extends Component
 {
     private Vector3f Position;
     private Vector2f Scale;
@@ -12,6 +12,7 @@ public class Transform
     {
         this.Position   = new Vector3f();
         this.Scale      = new Vector2f();
+        this.Name = "Transform";
     }
 
     public Transform(Vector3f position, Vector2f scale)
@@ -70,5 +71,11 @@ public class Transform
 
         Transform t = (Transform)o;
         return t.Position.equals(this.Position) && t.Scale.equals(this.Scale);
+    }
+
+    @Override
+    public void imgui()
+    {
+
     }
 }
