@@ -1,6 +1,7 @@
 package org.JavaGame.Editor;
 
 import imgui.ImGui;
+import org.JavaGame.Engine.Components.NonPickable;
 import org.JavaGame.Engine.GameObject;
 import org.JavaGame.Engine.Listeners.MouseListener;
 import org.JavaGame.Engine.Renderer.PickingTexture;
@@ -22,17 +23,23 @@ public class PropertiesWindow
 
     public void update(float dt, Scene currentScene)
     {
-        int x = (int) MouseListener.getScreenX();
-        int y = (int) MouseListener.getScreenY();
+
 
         if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT))
         {
-            int uid = PickingTexture.readPixel(x, y);
-            GameObject currentGo = currentScene.getGameObject(uid);
-            if(currentGo != null)
-            {
-                setActiveGameObject( currentGo );
+            int x = (int) MouseListener.getScreenX();
+            int y = (int) MouseListener.getScreenY();
 
+            int uid = PickingTexture.readPixel(x, y);
+
+            GameObject pickedObj = currentScene.getGameObject(uid);
+            if(pickedObj != null && pickedObj.getComponent(NonPickable.class) == null && !MouseListener.isDraggin())
+            {
+                ActiveGameobject = pickedObj;
+            }
+            else if(pickedObj == null && !MouseListener.isDraggin())
+            {
+                ActiveGameobject = null;
             }
         }
     }
@@ -54,5 +61,10 @@ public class PropertiesWindow
     public void setActiveGameObject(GameObject go)
     {
         this.ActiveGameobject = go;
+    }
+
+    public GameObject getActiveGameObject()
+    {
+        return this.ActiveGameobject;
     }
 }

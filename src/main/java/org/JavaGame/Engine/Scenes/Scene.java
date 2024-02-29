@@ -103,7 +103,9 @@ public abstract class Scene implements Runnable
         try
         {
             FileWriter writer = new FileWriter("saveFiles/level.txt");
-            writer.write(gson.toJson(this.GameObjects));
+            List<GameObject> objsToSerialize = GameObjects.stream().filter(GameObject::doSerialization).toList();
+
+            writer.write(gson.toJson(objsToSerialize));
             writer.close();
         } catch (IOException e)
         {

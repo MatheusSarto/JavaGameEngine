@@ -11,12 +11,8 @@ public class SpriteSheet
     private Texture Texture;
     private List<Sprite> Sprites;
 
-    public SpriteSheet()
-    {
 
-    }
-
-    public void InitSpriteSheet(Texture texture, int spriteWidth, int spriteHeight, int numberSprites, int spacing)
+    public SpriteSheet(Texture texture, int spriteWidth, int spriteHeight, int numberSprites, int spacing)
     {
         this.Sprites = new ArrayList<>();
 

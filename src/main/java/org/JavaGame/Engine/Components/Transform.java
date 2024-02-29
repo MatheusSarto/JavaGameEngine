@@ -7,6 +7,7 @@ public class Transform extends Component
 {
     private Vector3f Position;
     private Vector2f Scale;
+    private float Rotation = 0.0f;
 
     public Transform()
     {
@@ -77,5 +78,15 @@ public class Transform extends Component
     public void imgui()
     {
 
+    }
+
+    public float getRotation()
+    {
+        return Rotation;
+    }
+
+    public void setRotation(float rotation)
+    {
+        Rotation = rotation;
     }
 }

@@ -14,6 +14,7 @@ public class GameObject
     private String Name;
     public Transform Transform;
     private List<Component> Components;
+    private boolean DoSerialization = true;
 
     public GameObject(String name)
     {
@@ -125,5 +126,13 @@ public class GameObject
 
     public String getName() {
         return Name;
+    }
+    public void setNoSerialize()
+    {
+        this.DoSerialization = false;
+    }
+    public boolean doSerialization()
+    {
+        return this.DoSerialization;
     }
 }

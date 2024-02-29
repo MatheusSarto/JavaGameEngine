@@ -16,6 +16,7 @@ public class LevelEditorScene extends Scene
 {
     private SpriteSheet Sprites;
     private GameObject LevelEditorObjects = new GameObject("LevelEditor", new Transform());
+
     public LevelEditorScene(String name, int id)
     {
         super(name, id);
@@ -41,15 +42,17 @@ public class LevelEditorScene extends Scene
     public void Init()
     {
         super.Init();
+        Sprites = AssetPool.getSpriteSheet("assets/images/decorationsAndBlocks.png");
+        SpriteSheet gizmos = AssetPool.getSpriteSheet("assets/images/gizmos.png");
 
         LevelEditorObjects.addComponent(new MouseControls());
         LevelEditorObjects.addComponent(new GridLines());
         LevelEditorObjects.addComponent(new EditorCamera(this.Camera));
+        LevelEditorObjects.addComponent(new GizmoSystem(gizmos));
+        LevelEditorObjects.Init();
 
         DebugDraw.addLine2D(new Vector2f(0f, 0f), new Vector2f(800.0f, 800.0f), new Vector3f(2,0,0), 2000);
         DebugDraw.addLine2D(new Vector2f(0f, 0f), new Vector2f(800.0f, 800.0f), new Vector3f(2,0,0), 2);
-
-        Sprites = AssetPool.getSpriteSheet("assets/images/decorationsAndBlocks.png");
     }
 
     @Override
@@ -57,11 +60,10 @@ public class LevelEditorScene extends Scene
     {
         AssetPool.getShader("assets/shaders/default.glsl");
 
-        SpriteSheet spriteSheet = new SpriteSheet();
-        spriteSheet.InitSpriteSheet(AssetPool.getTexture("assets/images/decorationsAndBlocks.png"),
-                16, 16, 81, 0);
-
-        AssetPool.addSpriteSheet("assets/images/decorationsAndBlocks.png",spriteSheet);
+        AssetPool.addSpriteSheet("assets/images/decorationsAndBlocks.png",new SpriteSheet(AssetPool.getTexture("assets/images/decorationsAndBlocks.png"),
+                16, 16, 81, 0));
+        AssetPool.addSpriteSheet("assets/images/gizmos.png", new SpriteSheet(AssetPool.getTexture("assets/images/gizmos.png"),
+                24, 48, 3, 0));
 
 
         List<GameObject> goWithTextures = GameObjects.stream().filter(o -> o.getComponent(SpriteRender.class) != null
@@ -78,6 +80,10 @@ public class LevelEditorScene extends Scene
     @Override
     public void imgui()
     {
+        ImGui.begin("LevelEditorObjects");
+        LevelEditorObjects.imgui();
+        ImGui.end();
+
         ImGui.begin("Assets");
         ImVec2 windowPos = new ImVec2();
         ImGui.getWindowPos(windowPos);

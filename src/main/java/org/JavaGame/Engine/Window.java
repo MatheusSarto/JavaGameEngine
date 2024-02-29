@@ -21,7 +21,7 @@ public class Window
     private static int Height;
     private final String Title;
     private long GlfwWindow;
-    private ImGuiLayer ImGuiLayer;
+    private static ImGuiLayer ImGuiLayer;
     private static FrameBuffer FrameBuffer;
 
     public static org.JavaGame.Engine.Renderer.PickingTexture getPickingTexture() {
@@ -195,5 +195,9 @@ public class Window
     public static int getHeight()
     {
         return Height;
+    }
+    public static ImGuiLayer getImGuiLayer()
+    {
+        return Window.ImGuiLayer;
     }
 }

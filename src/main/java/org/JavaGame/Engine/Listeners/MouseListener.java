@@ -12,9 +12,11 @@ public class MouseListener
 {
     private static MouseListener Instance;
     private double ScrollX, ScrollY;
-    private double xPos, yPos, lastY, lastX;
+    private double xPos, yPos, LastY, LastX, WorldX, WorldY, LastWorldX, LastWorldY;
     private boolean MouseButtonPressed[] = new boolean[3];
     private boolean IsDragging;
+
+    private int MouseButtonsDown = 0;
 
     private static Vector2f GameViewportPos = new Vector2f();
     private static Vector2f GameViewportSize = new Vector2f();
@@ -25,8 +27,8 @@ public class MouseListener
         this.ScrollY = 0.0f;
         this.xPos = 0.0f;
         this.yPos = 0.0f;
-        this.lastX = 0.0f;
-        this.lastY = 0.0f;
+        this.LastX = 0.0f;
+        this.LastY = 0.0f;
     }
 
     public static MouseListener get()
@@ -40,13 +42,22 @@ public class MouseListener
 
     public static void mousePosCallback(long window, double xpos, double ypos)
     {
-        get().lastX = get().xPos;
-        get().lastY = get().yPos;
+        if(get().MouseButtonsDown > 0)
+        {
+            get().IsDragging = true;
+        }
+
+        get().LastX = get().xPos;
+        get().LastY = get().yPos;
+
+        get().LastWorldX = get().WorldX;
+        get().LastWorldY = get().WorldY;
 
         get().xPos = xpos;
         get().yPos = ypos;
 
-        get().IsDragging = get().MouseButtonPressed[0] || get().MouseButtonPressed[1] || get().MouseButtonPressed[2];
+        calcOrthoX();
+        calcOrthoY();
     }
 
     public static void mouserButtonCallback(long window, int button, int action, int mods)
@@ -54,12 +65,18 @@ public class MouseListener
         if(button > get().MouseButtonPressed.length) { return; }
         if(action == GLFW_PRESS)
         {
+            get().MouseButtonsDown++;
             get().MouseButtonPressed[button] = true;
         }
         else if(action == GLFW_RELEASE)
         {
-            get().MouseButtonPressed[button] = false;
-            get().IsDragging = false;
+            get().MouseButtonsDown--;
+            if(button < get().MouseButtonPressed.length)
+            {
+                get().MouseButtonPressed[button] = false;
+                get().IsDragging = false;
+            }
+
         }
     }
 
@@ -73,9 +90,12 @@ public class MouseListener
     {
         get().ScrollX = 0.0f;
         get().ScrollY = 0.0f;
-        get().lastX = get().xPos;
-        get().lastY = get().yPos;
+        get().LastX = get().xPos;
+        get().LastY = get().yPos;
+        get().LastWorldX = get().WorldX;
+        get().LastWorldY = get().WorldY;
     }
+
 
     public static float getX()
     {
@@ -87,11 +107,22 @@ public class MouseListener
     }
     public static float getDx()
     {
-        return (float)(get().lastX - get().xPos);
+        return (float)(get().LastX - get().xPos);
     }
+
+    public static float getWorldDx()
+    {
+        return (float)(get().LastWorldX - get().WorldX);
+
+    } public static float getWorldDy()
+    {
+        return (float)(get().LastWorldY - get().WorldY);
+
+    }
+
     public static float getDy()
     {
-        return (float)(get().lastY - get().yPos);
+        return (float)(get().LastY - get().yPos);
     }
     public static float getScrollX()
     {
@@ -124,6 +155,11 @@ public class MouseListener
     }
     public static float getOrthoX()
     {
+        return (float)get().WorldX;
+    }
+
+    private static void calcOrthoX()
+    {
         float currentX = getX() - get().GameViewportPos.x;
         currentX = (currentX / get().GameViewportSize.x) * 2.0f - 1.0f;
         Vector4f tmp = new Vector4f(currentX, 0, 0, 1);
@@ -131,12 +167,17 @@ public class MouseListener
 
         Camera camera = SceneManager.getCurrentScene().getCamera();
         camera.getInverseView().mul(camera.getInverseProjection(), viewProjection);
-
         tmp.mul(viewProjection);
-        currentX = tmp.x;
-        return currentX;
+
+        get().WorldX = tmp.x;
     }
+
     public static float getOrthoY()
+    {
+        return (float)get().WorldY;
+    }
+
+    private static void calcOrthoY()
     {
         float currentY = getY() - get().GameViewportPos.y;
         currentY = -((currentY / get().GameViewportSize.y) * 2.0f - 1.0f);
@@ -147,9 +188,8 @@ public class MouseListener
         camera.getInverseView().mul(camera.getInverseProjection(), viewProjection);
 
         tmp.mul(viewProjection);
-        currentY = tmp.y;
 
-        return currentY;
+        get().WorldY = tmp.y;
     }
 
     public static float getScreenX()

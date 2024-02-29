@@ -14,16 +14,10 @@ public abstract class Component implements Runnable
     protected String Name = "Unkown";
     private static int ID_COUNTER = 0;
     private int UID = -1;
-    private transient GameObject GameObject = null;
 
 
-    public GameObject getGameObject() {
-        return GameObject;
-    }
-    public void setGameObject(GameObject gameobject)
-    {
-        this.GameObject = gameobject;
-    }
+
+    protected transient GameObject GameObject = null;
 
     public void Init() {}
     public void update(float dt) { }
@@ -129,5 +123,11 @@ public abstract class Component implements Runnable
     public void setName(String name) {
         Name = name;
     }
-
+    public void setGameObject(GameObject gameObject)
+    {
+        GameObject = gameObject;
+    }
+    public GameObject getGameObject() {
+        return GameObject;
+    }
 }
